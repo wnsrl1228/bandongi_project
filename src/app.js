@@ -4,14 +4,25 @@ const path = require('path');
 const session = require('express-session');
 const cookieParse = require('cookie-parser');
 const dotenv = require('dotenv');
+
 dotenv.config();
 
+const userRoute = require('./routes/users');
+const authRoute = require('./routes/auths');
 
 
 const app =express();
 app.set('port', process.env.PORT || 8001);
 
+
+// middleware
 app.use(morgan('dev'));
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
+//router
+app.use('/api/users', userRoute);
+app.use('/api/auths', authRoute);
 
 app.get('/', (req, res) => {
     res.send("반갑습니다");
