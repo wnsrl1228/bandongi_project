@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/auth/join" method="post">
+        <div>
+            <input type="text" placeholder="아이디" name="userId">
+        </div>
+        <div>
+            <input type="password" placeholder="비번" name="password">
+        </div>
+        <div>
+            <input type="text" placeholder="이메일" name="email">
+        </div>
+        <div>
+            <input type="text" placeholder="이름" name="username">
+        </div>
+        <div>
+            <input type="text" placeholder="닉네임" name="nickname">
+        </div>
+        <div>
+            <input type="submit" value="회원가입">
+        </div>
+
+    </form>
+
+    <form action="/auth/login" method="post">
+        <div>
+            <input type="text" placeholder="아이디" name="userId">
+        </div>
+        <div>
+            <input type="password" placeholder="비번" name="password">
+        </div>
+        <div>
+            <input type="submit" value="로그인">
+        </div>
+    
+    </form>
+</body>
+</html>

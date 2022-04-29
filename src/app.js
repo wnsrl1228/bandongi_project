@@ -7,14 +7,17 @@ const dotenv = require('dotenv');
 const passport = require('passport');
 dotenv.config();
 const passportConfig = require('./passport');
+
 const userRoute = require('./routes/users');
-const authRouter = require('./routes/auth');
+const authRouter = require('./routes/auths');
+const postRouter = require('./routes/posts');
 
 
 
 const app =express();
 app.set('port', process.env.PORT || 8001);
 
+// app.use(express.static(path.join(__dirname, 'public')));
 
 // middleware
 passportConfig();
@@ -38,10 +41,13 @@ app.use(passport.session());
 
 //router
 app.use('/auth', authRouter);
+app.use('/post', postRouter);
 
 app.get('/', (req, res) => {
     // req.session.name='bbb';
-    res.send("반갑습니다");
+
+    //임시 프론트
+    res.sendFile(__dirname + '/views/testHome.html');
 });
 
 
