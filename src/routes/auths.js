@@ -6,7 +6,7 @@ const path = require('path');
 const { isLoggedIn, isNotLoggedIn} = require('./middlewares');
 
 
-//메인
+// 로그인 화면 불러오기
 router.get('/', (req, res, next) => {
     res.sendFile(path.resolve('views/testLogin.html'));
 })
@@ -48,9 +48,7 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
         }
         // 로그인을 실패한 경우
         if (!user) {
-            console.log(info.message);
             const message = encodeURIComponent(info.message);
-            console.log(message);
             return res.redirect(`/?loginError=${message}`);
         }
         return req.login(user, (loginError) => {
