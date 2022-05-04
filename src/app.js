@@ -8,9 +8,10 @@ const passport = require('passport');
 dotenv.config();
 const passportConfig = require('./passport');
 
-const userRoute = require('./routes/users');
+
 const authRouter = require('./routes/auths');
 const postRouter = require('./routes/posts');
+const userRouter = require('./routes/users');
 
 
 
@@ -42,6 +43,7 @@ app.use(passport.session());
 //router
 app.use('/auth', authRouter);
 app.use('/post', postRouter);
+app.use('/user', userRouter);
 
 app.get('/', (req, res) => {
     // req.session.name='bbb';
