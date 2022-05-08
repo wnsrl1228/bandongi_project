@@ -39,9 +39,9 @@ export default function NavbarComponent() {
             
             <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} >
                 <Container fixed>
-                    <Toolbar fixed>
+                    <Toolbar>
                         <Typography variant="h6" component="div" sx={{ mr: 2 }}>
-                            <Link component={RouterLink} to="/"  underline="none" style={{color:"white"}}>
+                            <Link component={RouterLink} to="/" underline="none" style={{color:"white"}}>
                                 반동이
                             </Link>
                         </Typography>

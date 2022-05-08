@@ -12,10 +12,10 @@ export default function Home() {
         <React.Fragment>
             <NavbarComponent/>
             <Grid container width="100%" >
-                <Grid width="230px">
+                <Grid item width="230px">
                     <SidebarComponent/>
                 </Grid>
-                <Grid backgroundColor="#f0f2f5"  md>
+                <Grid item backgroundColor="#f0f2f5"  md>
                     <MainComponent/>
                 </Grid>
             </Grid>
