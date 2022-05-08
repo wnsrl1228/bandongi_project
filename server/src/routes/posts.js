@@ -49,17 +49,19 @@ router.get('/:category', async (req, res, next) => {
     try {
         // DB에서 해당 카테고리 게시글 목록 불러오기
         const [dbPosts] = await pool.execute(
-            `SELECT p.id, u.profile_img, unickname, p.title, p.content, p.view_count, p.comment_count, p.category, p.created_date 
+            `SELECT p.id, u.profile_img, u.nickname, p.title, p.content,p.comment_count, c.like_count, p.created_date
             FROM post p LEFT JOIN user u ON p.user_id = u.id
+            LEFT JOIN (SELECT count(post_id) as like_count,post_id FROM post_like
+            GROUP BY post_id) c ON p.id = c.post_id
             WHERE p.category = ?;`,
             [category]
         );
-        return res.status(201).json({dbPosts}); // 추후 변경
+        return res.status(201).json(dbPosts); // 추후 변경
     } catch (error) {
         console.log(error);
         return next(error);
     }
-
+    
     // post데이터와 view 리턴 --> 추후 구현
     // res.render("이동할 view", { 게시글데이터 });
 })
@@ -80,7 +82,7 @@ router.get('/:id', isLoggedIn, async (req, res, next) => {
         if (Array.isArray(dbPostAndComments) && dbPostAndComments.length == 0) {
             return res.redirect('/');
         }
-        return res.status(201).json({dbPostAndComments}); // 추후 변경
+        return res.status(201).json(dbPostAndComments); // 추후 변경
     } catch (error) {
         console.log(error);
         return next(error);
@@ -114,7 +116,7 @@ router.get('/:id/edit', isLoggedIn, async (req, res, next) => {
             where p.id=?;`,
             [postId]
         );
-        return res.status(201).json({dbPost}); // 추후 변경
+        return res.status(201).json(dbPost); // 추후 변경
     } catch (error) {
         console.log(error);
         return next(error);

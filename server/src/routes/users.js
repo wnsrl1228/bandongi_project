@@ -22,7 +22,7 @@ router.get('/profile/:id', isLoggedIn, async (req, res, next) => {
             console.log("존재하지 않은 프로필 입니다.");
             return res.redirect('/');
         }
-        return res.status(201).json({dbUserProfileAndPosts}); //추후 변경
+        return res.status(201).json(dbUserProfileAndPosts); //추후 변경
     } catch (error) {
         console.log(error);
         return next(error);
@@ -65,7 +65,7 @@ router.get('/friend', isLoggedIn, async (req, res, next) => {
             FROM friend f LEFT JOIN user u ON f.friend_id=u.id WHERE f.user_id=? and status=1`,
             [userId]
         );
-        return res.status(201).json({dbUserFirends}); // 수정된 프로필로 이동 --> 추후 변경
+        return res.status(201).json(dbUserFirends); // 수정된 프로필로 이동 --> 추후 변경
     } catch (error) {
         console.log(error);
         return next(error);
@@ -83,7 +83,7 @@ router.get('/friend/search', isLoggedIn, async (req, res, next) => {
             WHERE f.user_id=? and status=1 and u.nickname LIKE ?;`,
             [userId,nickname]
         );
-        return res.status(201).json({dbUserFirends});
+        return res.status(201).json(dbUserFirends);
     } catch (error) {
         console.log(error);
         return next(error);
