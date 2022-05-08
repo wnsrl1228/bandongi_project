@@ -49,9 +49,9 @@ router.get('/:category', async (req, res, next) => {
     try {
         // DB에서 해당 카테고리 게시글 목록 불러오기
         const [dbPosts] = await pool.execute(
-            `SELECT p.id, u.profile_img, u.nickname, p.title, p.content,p.comment_count, c.like_count, p.created_date
+            `SELECT p.id, u.profile_img, u.nickname, p.title, p.content,p.comment_count, IFNULL(c.like_co,0) like_count, p.created_date
             FROM post p LEFT JOIN user u ON p.user_id = u.id
-            LEFT JOIN (SELECT count(post_id) as like_count,post_id FROM post_like
+            LEFT JOIN (SELECT count(post_id) as like_co ,post_id FROM post_like
             GROUP BY post_id) c ON p.id = c.post_id
             WHERE p.category = ?;`,
             [category]
