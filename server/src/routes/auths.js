@@ -12,14 +12,31 @@ router.get('/', (req, res, next) => {
 })
 //회원가입
 router.post('/join', isNotLoggedIn, async (req,res,next) => {
+
     const { userId, email, password, username, nickname } = req.body;
     try {
         //아이디가 이미 존해하는지 조회 
-        const [dbUser] = await pool.execute('SELECT * FROM user WHERE userId = ?', [userId]);
-        console.log(Array.isArray(dbUser));
+        const [dbUser] = await pool.execute('SELECT userId,email,nickname FROM user WHERE userId = ? OR email=? OR nickname=?', [userId, email, nickname]);
+        let message = "";
         //이미 존재하는 아이디인지 체크
         if (Array.isArray(dbUser) && dbUser.length > 0) {
-            return res.redirect('/join?error=exist');
+            for (let i=0; i<dbUser.length; i++){
+                console.log(dbUser);
+                console.log(dbUser[i]);
+                if (userId === dbUser[i].userId) {
+                    message = "이미 존재하는 아이디입니다";
+                    break;
+                }
+                if (email === dbUser[i].email) {
+                    message = "이미 존재하는 이메일입니다";
+                    break;
+                }
+                if (nickname === dbUser[i].nickname) {
+                    message = "이미 존재하는 닉네임입니다";
+                    break;
+                }
+            }
+            return res.json({success:false,message:message})
         }
         //비밀번호 해쉬화
         const hash = await bcrypt.hash(password, 12);
@@ -29,7 +46,7 @@ router.post('/join', isNotLoggedIn, async (req,res,next) => {
             [email, userId, hash, username, nickname]
         );
         //화면 이동
-        return res.redirect('/')
+        return res.json({success:true})
 
     } catch (error) {
         console.log(error);
