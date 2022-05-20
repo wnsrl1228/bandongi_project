@@ -83,6 +83,6 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
 router.get('/logout', isLoggedIn, (req, res) => {
     req.logout();
     req.session.destroy();
-    res.redirect('/');
+    return res.json({success:true});
 });
 module.exports = router;

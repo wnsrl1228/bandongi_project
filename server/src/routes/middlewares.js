@@ -12,13 +12,15 @@ exports.isNotLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
         return next();
     } else {
-        //세션은 있는데 token이 없는 경우
         if(!req.body.token){
+            console.log(req.body.token)
             req.logout();
-            req.session.destroy();
+            // req.session.destroy();
             return next();
+        } else {
+            const message = '로그인한 상태입니다.';
+            return res.json({success:false,message:message});
         }
-        const message = '로그인한 상태입니다.';
-        return res.json({success:false,message:message});
+        
     }
 };
