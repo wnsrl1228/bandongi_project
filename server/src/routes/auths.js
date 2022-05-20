@@ -13,7 +13,8 @@ router.get('/', (req, res, next) => {
 //회원가입
 router.post('/join', isNotLoggedIn, async (req,res,next) => {
 
-    const { userId, email, password, username, nickname } = req.body;
+    const { userId, email, password, username, nickname, token } = req.body;
+
     try {
         //아이디가 이미 존해하는지 조회 
         const [dbUser] = await pool.execute('SELECT userId,email,nickname FROM user WHERE userId = ? OR email=? OR nickname=?', [userId, email, nickname]);
@@ -65,8 +66,7 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
         }
         // 로그인을 실패한 경우
         if (!user) {
-            const message = encodeURIComponent(info.message);
-            return res.redirect(`/?loginError=${message}`);
+            return res.json({success:false,message:info.message})
         }
         return req.login(user, (loginError) => {
             if (loginError) {
@@ -74,7 +74,7 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
                 return next(loginError);
             }
             //login함수를 통해 세션쿠키를 브라우저로 보내줌
-            return res.redirect('/');
+            return res.json({success:true,userId:user.userId})
         });
     })(req, res, next);
 })
