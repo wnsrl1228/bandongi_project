@@ -1,10 +1,10 @@
 const router = require('express').Router();
 const pool = require('../config/db');
 
-
 // 카테고리 페이지 불러오기  get /
 // 무한 스크롤 , 페이징  --> 추후 구현
 router.get('/main', async (req, res, next) => {
+
     try {
         // DB에서 해당 카테고리 게시글 목록 불러오기
         const [dbPosts] = await pool.execute(

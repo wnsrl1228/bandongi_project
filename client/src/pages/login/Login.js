@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { Button,
         TextField,
@@ -11,11 +11,41 @@ import { Button,
         Container,
         Paper
     } from '@mui/material';
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate} from "react-router-dom";
 export default function Login() {
-    const [userId, setUserId] = useState();
-    const [password, setPassword] = useState();
+    const [userId, setUserId] = useState("");
+    const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
+    // const onUserIdHandler = (e) => {
+    //     setUserId(e.currentTarget.value);
+    // }
+    // const onPasswordHandler = (e) => {
+    //     setPassword(e.currentTarget.value);
+    // }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        
+        const body = {
+            userId: userId,
+            password: password,
+            token : localStorage.getItem('token'),
+        }
+        axios.post("/auth/login",body)
+            .then( (res) => {
+                if (res.data.success){
+                    localStorage.setItem('token',res.data.userId);
+                    window.location.replace("/");
+                } else{
+                    alert(res.data.message);
+                    navigate('/login');
+                }
+            }).catch( (err) => {
+                alert("다시 시도해주세요.");
+                navigate('/login');
+            })
+    };
     return (
         <Container component="main" maxWidth="xs" sx={{mt:12}}>
             <Paper variant="outlined"  
@@ -31,7 +61,7 @@ export default function Login() {
                     <Typography component="h1" variant="h5" sx={{ mb:5 }} >
                         <Link component={RouterLink} to="/" underline="none">반동이</Link>
                     </Typography>
-                    <form noValidate >
+                    <Box component="form"  onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <TextField
                             margin="normal"
                             name="userId"
@@ -67,7 +97,7 @@ export default function Login() {
                         sx={{ mt : 3,mb:2 }}>
                             로그인
                         </Button>
-                    </form>
+                    </Box>
                     <Grid container>
                         <Grid item xs>
                             <Link href="/" sx={{fontSize:14}} underline="none">

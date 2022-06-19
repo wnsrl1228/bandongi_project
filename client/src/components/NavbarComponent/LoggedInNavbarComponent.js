@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect} from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import { Button,
-    Typography,
+import axios from 'axios';
+import { Typography,
     Box,
     AppBar,
     Toolbar,
@@ -14,7 +14,7 @@ import { Button,
     ListItemIcon,
     Link
 } from '@mui/material';
-import { Link as RouterLink} from "react-router-dom";
+import { Link as RouterLink, useNavigate} from "react-router-dom";
 import SearchIcon from '@mui/icons-material/Search';
 import GroupIcon from '@mui/icons-material/Group';
 import Logout from '@mui/icons-material/Logout';
@@ -46,14 +46,45 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function LoggedInNavbarComponent() {
+    const navigate = useNavigate();
     const [anchorE1, setAnchorE1] = useState(null);
     const open = Boolean(anchorE1);
+
+    //로그인 정보
+    const [user, setUser] = useState([]);
+    onst [profileImage, setProfileImage] = useState([]); //추후 기능 구현
+    useEffect(() => {
+        const fecthUser = async () => {
+            try{
+                const res = await axios.get("/user/information");
+                setUser(res.data[0].nickname);
+            } catch (err){
+                alert(err);
+            }
+            
+        }
+        fecthUser();
+    },[]);
     const handleClick = (event) => {
         setAnchorE1(event.currentTarget);
     };
     const handleClose = () => {
         setAnchorE1(null);
     };
+    const isLogout = () => {
+        axios.get("/auth/logout")
+            .then( (res) => {
+                if (res.data.success){
+                    localStorage.removeItem('token');
+                    window.location.replace("/");
+                }
+            }).catch( (err) => {
+                alert("다시 시도해주세요.");
+                navigate('/');
+                
+            })
+    }
+
     const renderMobileMenu = (
         <Menu
             anchorEl={anchorE1}
@@ -94,7 +125,7 @@ export default function LoggedInNavbarComponent() {
                 </ListItemIcon>
                 친구 목록
             </MenuItem>
-            <MenuItem>
+            <MenuItem onClick={isLogout}>
                 <ListItemIcon>
                     <Logout fontSize="small" />
                 </ListItemIcon>
@@ -132,7 +163,7 @@ export default function LoggedInNavbarComponent() {
                             >   
                                 <Avatar sx={{ width: 32, height: 32 }}></Avatar>
                                 <Typography sx={{ ml: 1,whiteSpace : "nowrap",color:'white'}}>
-                                    김준기
+                                    {user}
                                 </Typography>
                             </IconButton>
                         </Box>

@@ -5,9 +5,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import PetsIcon from '@mui/icons-material/Pets';
 import { 
   Box,
-  AppBar,
   Toolbar,
-  Link,
   Drawer,
   List,
   ListItem,

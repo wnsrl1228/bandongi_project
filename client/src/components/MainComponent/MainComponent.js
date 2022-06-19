@@ -1,5 +1,5 @@
 import React, { useState,useEffect} from 'react';
-import { styled, alpha } from '@mui/material/styles';
+
 import { 
     Grid,
     Card,
@@ -16,21 +16,36 @@ import {
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PetsIcon from '@mui/icons-material/Pets';
 import axios from "axios";
-const h=[1,2,3,4,5,6]
+
+import cat1 from "./sample/cat1.jpg"
+import dog1 from "./sample/dog1.jpg"
+import dog2 from "./sample/dog2.jpg"
+import dog3 from "./sample/dog3.jpg"
+import dog4 from "./sample/dog4.jpg"
+import dog5 from "./sample/dog5.jpg"
+import dog6 from "./sample/dog6.jpg"
+import dog7 from "./sample/dog7.jpg"
+import dog8 from "./sample/dog8.jpg"
+const hello=[dog1,dog6,dog3,dog4,dog5,cat1,dog2,dog7,dog8]
 export default function MainComponent() {
     const [posts, setPosts] = useState([])
     useEffect(() => {
         const fecthPost = async () => {
-            const res = await axios.get("/main");
-            setPosts(res.data);
+            try{
+                const res = await axios.get("/main");
+                setPosts(res.data);
+            } catch (err){
+                alert(err);
+            }
+            
         }
         fecthPost();
     },[]);
-    console.log(posts)
+
     return (
-        <Container  maxWidth="lg" sx={{mt: {xs:5,sm:16,md:20}}}>
+        <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20}}}>
             <Grid container spacing={2} justifyContent="space-evenly">
-                {posts.map((post) => (
+                {posts.map((post,index) => (
                     <Grid item xs={12} sm={6} md={4} key={post.id}
                         >
                         <Card sx={{}}>
@@ -52,7 +67,7 @@ export default function MainComponent() {
                                     {post.title}
                                 </Typography>
                             </CardContent>
-                            
+
                             <CardMedia
                                 component="img"
                                 sx={{
@@ -60,7 +75,7 @@ export default function MainComponent() {
                                 // 16:9
                                 // pt: '56.25%',
                                 }}
-                                image={require('./dog.jpg')}
+                                image={hello[index]}
                                 alt="random"
                             />
                             <CardContent>

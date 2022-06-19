@@ -74,7 +74,7 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
                 return next(loginError);
             }
             //login함수를 통해 세션쿠키를 브라우저로 보내줌
-            return res.json({success:true,userId:user.userId})
+            return res.json({success:true,userId:user.id})
         });
     })(req, res, next);
 })

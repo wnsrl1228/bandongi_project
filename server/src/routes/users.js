@@ -7,6 +7,25 @@ const { isLoggedIn, isNotLoggedIn} = require('./middlewares');
 
 
 // 해당 id의 user 프로필 페이지 불러오기
+router.get('/information', isLoggedIn, async (req, res, next) => {
+    const userId = req.user.id
+    try {
+        // DB에 해당 id 유저의 정보랑 게시글 불러오기
+        const [dbInformation] = await pool.execute(
+            `SELECT nickname FROM user WHERE id = ?;`,
+            [userId]
+        );
+        if (Array.isArray(dbInformation) && dbInformation.length == 0) {
+            console.log("존재하지 않은 프로필 입니다.");
+            return res.redirect('/');
+        }
+        return res.status(201).json(dbInformation); //추후 변경
+    } catch (error) {
+        console.log(error);
+        return next(error);
+    }
+});
+
 // 친구의 프로필인 경우 친구요청 페이지 바껴야됨 -->추후 변경
 router.get('/profile/:id', isLoggedIn, async (req, res, next) => {
     const userId = req.params.id;

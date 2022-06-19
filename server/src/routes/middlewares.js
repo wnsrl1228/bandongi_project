@@ -4,7 +4,7 @@ exports.isLoggedIn = (req, res, next) => {
         // 로그인 되어 있으면 쿠키값이 있고 true가 나옴
         return next();
     } else {
-        return res.status(403).send('로그인 필요');
+        return res.status(500).send('로그인 필요');
     }
 };
 
