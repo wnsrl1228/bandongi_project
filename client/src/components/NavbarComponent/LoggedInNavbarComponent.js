@@ -52,7 +52,7 @@ export default function LoggedInNavbarComponent() {
 
     //로그인 정보
     const [user, setUser] = useState([]);
-    onst [profileImage, setProfileImage] = useState([]); //추후 기능 구현
+    const [profileImage, setProfileImage] = useState([]); //추후 기능 구현
     useEffect(() => {
         const fecthUser = async () => {
             try{
@@ -65,6 +65,7 @@ export default function LoggedInNavbarComponent() {
         }
         fecthUser();
     },[]);
+
     const handleClick = (event) => {
         setAnchorE1(event.currentTarget);
     };
@@ -75,7 +76,7 @@ export default function LoggedInNavbarComponent() {
         axios.get("/auth/logout")
             .then( (res) => {
                 if (res.data.success){
-                    localStorage.removeItem('token');
+                    sessionStorage.removeItem('token');
                     window.location.replace("/");
                 }
             }).catch( (err) => {

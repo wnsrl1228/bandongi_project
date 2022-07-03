@@ -19,7 +19,7 @@ router.get('/information', isLoggedIn, async (req, res, next) => {
             console.log("존재하지 않은 프로필 입니다.");
             return res.redirect('/');
         }
-        return res.status(201).json(dbInformation); //추후 변경
+        return res.status(201).json(dbInformation); //추후 변경, (이미지 추가)
     } catch (error) {
         console.log(error);
         return next(error);

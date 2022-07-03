@@ -57,7 +57,7 @@ export default function Join() {
             email: email,
             username: username,
             nickname: nickname,
-            token : localStorage.getItem('token')
+            token : sessionStorage.getItem('token')
         }
         axios.post("/auth/join",body)
             .then( (res) => {

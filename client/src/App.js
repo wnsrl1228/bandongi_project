@@ -1,9 +1,10 @@
 import Home from './pages/home/Home';
 import Login from './pages/login/Login';
 import Join from './pages/join/Join';
+import Post from './pages/post/Post';
 
 import PublicRoute from "./utils/PublicRoute"; 
-// import PrivateRoute from "./utils/PrivateRoute";
+import PrivateRoute from "./utils/PrivateRoute";
 
 
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
@@ -17,8 +18,11 @@ function App() {
 
         <Route exact path="/" element={<Home/>}/>
 
+        <Route exact path="/post/:id" element={ <PrivateRoute restricted={true}/>}>
+          <Route exact path="/post/:id" element={<Post/>} />
+        </Route>
         <Route exact path="/login" element={ <PublicRoute restricted={true}/>}>
-          <Route exact path="/login" element={<Login/>}/>
+          <Route exact path="/login" element={<Login/>} />
         </Route>
         {/* <PublicRoute restricted={false} component={Home} path="/" exact /> */}
         <Route path="/login" element={<Login/>}/>

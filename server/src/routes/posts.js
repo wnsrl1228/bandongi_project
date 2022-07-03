@@ -72,11 +72,16 @@ router.get('/:id', isLoggedIn, async (req, res, next) => {
     try {
         // DB에서 해당 id의 게시글과 댓글 목록 가져오기
         const [dbPostAndComments] = await pool.execute(
-            `SELECT u.nickname, u.profile_img, p.*, c.id c_id, c.content c_content, c.parent_group, c.child_group_order, c.created_date c_created_date, c.updated_date c_updated_date
-            FROM post p LEFT JOIN user u ON p.user_id=u.id 
+            `SELECT u.nickname, u.profile_img, p.id, p.title, p.content,p.comment_count, DATE_FORMAT(p.created_date,'%Y-%m-%d %h:%m:%s') created_date,
+			IFNULL(p_l.p_like_count,0) p_like_count,IFNULL(c_l.c_like_count,0) c_like_count,
+			c.id c_id, c.content c_content, c.parent_group, c.child_group_order, DATE_FORMAT(c.created_date,'%Y-%m-%d %h:%m:%s') c_created_date, c.updated_date c_updated_date, cu.nickname
+            FROM post p LEFT JOIN user u ON p.user_id=u.id
+            LEFT JOIN (SELECT count(post_id) as p_like_count, post_id FROM post_like WHERE post_id=?) p_l ON p.id = p_l.post_id
             LEFT JOIN comment c ON p.id=c.post_id
+            LEFT JOIN user cu ON c.user_id = cu.id
+            LEFT JOIN (SELECT count(comment_id) as c_like_count, comment_id FROM comment_like GROUP BY comment_id) c_l ON c.id = c_l.comment_id
             WHERE p.id=?;`,
-            [postId]
+            [postId,postId]
         );
         // dbPostAndComments 잘못된 값인 경우
         if (Array.isArray(dbPostAndComments) && dbPostAndComments.length == 0) {

@@ -1,6 +1,7 @@
 
 const isLogin = () => {
-    return !!localStorage.getItem('token');
+    return !!sessionStorage.getItem('token');
+    
 }
 export default isLogin;
 

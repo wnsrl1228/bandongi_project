@@ -30,12 +30,12 @@ export default function Login() {
         const body = {
             userId: userId,
             password: password,
-            token : localStorage.getItem('token'),
+            token : sessionStorage.getItem('token'),
         }
         axios.post("/auth/login",body)
             .then( (res) => {
                 if (res.data.success){
-                    localStorage.setItem('token',res.data.userId);
+                    sessionStorage.setItem('token',res.data.userId);
                     window.location.replace("/");
                 } else{
                     alert(res.data.message);
