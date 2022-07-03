@@ -2,6 +2,7 @@ import Home from './pages/home/Home';
 import Login from './pages/login/Login';
 import Join from './pages/join/Join';
 import Post from './pages/post/Post';
+import Profile from './pages/profile/Profile';
 
 import PublicRoute from "./utils/PublicRoute"; 
 import PrivateRoute from "./utils/PrivateRoute";
@@ -20,6 +21,9 @@ function App() {
 
         <Route exact path="/post/:id" element={ <PrivateRoute restricted={true}/>}>
           <Route exact path="/post/:id" element={<Post/>} />
+        </Route>
+        <Route exact path="/profile/:id" element={ <PrivateRoute restricted={true}/>}>
+          <Route exact path="/profile/:id" element={<Profile/>} />
         </Route>
         <Route exact path="/login" element={ <PublicRoute restricted={true}/>}>
           <Route exact path="/login" element={<Login/>} />

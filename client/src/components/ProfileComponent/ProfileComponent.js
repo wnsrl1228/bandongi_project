@@ -13,30 +13,42 @@ import {
     Divider,
     Link,
     CardActionArea,
+    Box
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PetsIcon from '@mui/icons-material/Pets';
 import axios from "axios";
 import { Link as RouterLink} from "react-router-dom";
-import cat1 from "./sample/cat1.jpg"
-import dog1 from "./sample/dog1.jpg"
-import dog2 from "./sample/dog2.jpg"
-import dog3 from "./sample/dog3.jpg"
-import dog4 from "./sample/dog4.jpg"
-import dog5 from "./sample/dog5.jpg"
-import dog6 from "./sample/dog6.jpg"
-import dog7 from "./sample/dog7.jpg"
-import dog8 from "./sample/dog8.jpg"
 
 
-const hello=[dog1,dog6,dog3,dog4,dog5,cat1,dog2,dog7,dog8]
-export default function MainComponent() {
+
+
+export default function ProfileComponent(props) {
+    //session 토큰이랑 비교해서 화면 살짝 다르게 해야됨
+    // 본인 프로필일 경우 vs 다른 사람 프로필일 경우
+    // 친구 프로필일 경우 vs 친구가 아닌 사람일 경우
+
+    const profile_id = props.profile_id; // 해당 유저 아이디, 
     const [posts, setPosts] = useState([])
+
+    const [nickname, setNickname] = useState("")
+    const [userId, setUserId] = useState("")
+    const [profileImg, setProfileImg] = useState("")
+    const [title, setTitle] = useState("")
+    const [profileContent, setProfileContent] = useState("")
+
     useEffect(() => {
         const fecthPost = async () => {
             try{
-                const res = await axios.get("/main");
+                const url = "/user/profile/" + profile_id;
+                const res = await axios.get(url);
                 setPosts(res.data);
+                setNickname(res.data[0].nickname);
+                setUserId(res.data[0].userId);
+                setProfileImg(res.data[0].profile_img);
+                setTitle(res.data[0].title);
+                setProfileContent(res.data[0].profile_content);
+               
             } catch (err){
                 alert(err);
             }
@@ -48,6 +60,39 @@ export default function MainComponent() {
 
     return (
         <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:100}} >
+            <Container fixed>
+            <Grid container sx={{mb:3,p:2,pt:5}} alignItems="center">
+                <Grid item style={{backgroundColor:"grey",borderRadius:"10px"}} xs={12} height="200px" sx={{boxShadow:4}}>
+                    <img></img>
+                </Grid>
+                <Grid item sx={{ml:4,mt:-5}} >
+                    <Link component={RouterLink} to={{pathname:`/profile/${userId}`}}>
+                        <Avatar src={profileImg} sx={{boxShadow:3}}style={{width:"100px",height:"100px",border: '5px solid white'}}></Avatar>
+                    </Link>
+                </Grid>
+                <Grid item  sx={{ml:2}}>
+                  <Typography  variant="h4" fontWeight="Bold" >
+                    {nickname}
+                  </Typography>
+                </Grid>
+                <Grid item  sx={{ml:3,mt:4,mb:-3}} xs={12}>
+                  <Typography  variant="h5" fontWeight="Bold" >
+                    자기소개
+                  </Typography>
+                </Grid>
+                <Grid item  xs={12} sx={{mt:4}}>
+                  <Container fixed style={{border: '1px solid #d2d2d2',borderRadius:"10px",backgroundColor:"#FFFFFF"}} sx={{p:5,boxShadow:4}}>
+                    <Typography  variant="h6"  >
+                      {profileContent}
+                    </Typography>
+                  </Container>
+                </Grid>
+            </Grid>
+            <h1 style={{marginLeft:"20px"}}>글 목록</h1>
+            </Container>
+            
+            
+            <Container fixed>
             <Grid container spacing={2} justifyContent="space-evenly">
                 {posts.map((post,index) => (
                     <Grid item xs={12} sm={6} md={4} key={post.id}
@@ -86,7 +131,6 @@ export default function MainComponent() {
                                     // 16:9
                                     // pt: '56.25%',
                                     }}
-                                    image={hello[index]}
                                     alt="random"
                                 />
                             
@@ -120,6 +164,7 @@ export default function MainComponent() {
                     </Grid>
                 ))}
             </Grid>
+            </Container>
         </Container>
 
 

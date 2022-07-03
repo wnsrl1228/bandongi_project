@@ -38,7 +38,7 @@ export default function PostComponent(props) {
                 const res = await axios.get(url);
                 setComments(res.data)
                 setPost(res.data[0]);
-                console.log(comments);
+
             } catch (err){
                 alert(err);
             }
@@ -53,7 +53,9 @@ export default function PostComponent(props) {
             <Card sx={{}}>
                 <CardHeader
                     avatar={
-                        <Avatar src={post.profile_img}></Avatar>
+                        <Link component={RouterLink} to={{pathname:`/profile/${post.userId}`}}>
+                            <Avatar src={post.profile_img}></Avatar>
+                        </Link>
                     }
                     action={
                         <IconButton aria-label="settings">
@@ -61,7 +63,10 @@ export default function PostComponent(props) {
                         </IconButton>
                     }
                     sx={{p:1,pl:2,pr:2}}
-                    title={post.nickname}
+                    title={
+                        <Link component={RouterLink} to={{pathname:`/profile/${post.userId}`}} underline="none" style={{color:"black"}}>
+                            {post.userNickname}
+                        </Link>}
                     subheader={post.created_date}
                 /><Divider light />
                 
@@ -140,11 +145,16 @@ export default function PostComponent(props) {
                         <Paper style={{ padding: "10px 20px", marginTop:10 }} key={comment.c_id}>
                             <Grid container wrap="nowrap" spacing={2}>
                                 <Grid item>
-                                    <Avatar alt="Remy Sharp"/>
+                                    <Link component={RouterLink} to={{pathname:`/profile/${comment.commentUserID}`}}>
+                                        <Avatar src={comment.profile_img}></Avatar>
+                                    </Link>
+                                    
                                 </Grid>
                                 <Grid item  wrap="nowrap" xs>
                                     <h4 style={{ margin: 0, textAlign: "left" }}>
-                                        {comment.nickname}
+                                        <Link component={RouterLink} to={{pathname:`/profile/${comment.commentUserID}`}} underline="none" style={{color:"black"}}>
+                                            {comment.commentNickname}
+                                        </Link>
                                     </h4>
                                     {/* 댓글 내용 */}
 

@@ -32,9 +32,13 @@ router.get('/profile/:id', isLoggedIn, async (req, res, next) => {
     try {
         // DB에 해당 id 유저의 정보랑 게시글 불러오기
         const [dbUserProfileAndPosts] = await pool.execute(
-            `SELECT u.profile_img, u.id, u.nickname, u.profile_content, p.id, p.title, p.content, p.view_count, p.comment_count, p.category, p.created_date 
+            `SELECT u.id userId, u.profile_img, u.nickname, u.profile_content,p.id, p.title, p.content,p.comment_count,
+            IFNULL(c.like_co,0) like_count, DATE_FORMAT(p.created_date,'%Y-%m-%d %h:%m:%s') created_date
             FROM user u LEFT JOIN post p ON u.id = p.user_id 
-            WHERE u.id = ?;`,
+            LEFT JOIN (SELECT count(post_id) as like_co ,post_id FROM post_like
+            GROUP BY post_id) c ON p.id = c.post_id
+            WHERE u.id=?
+            ORDER BY created_date DESC;`,
             [userId]
         );
         if (Array.isArray(dbUserProfileAndPosts) && dbUserProfileAndPosts.length == 0) {
