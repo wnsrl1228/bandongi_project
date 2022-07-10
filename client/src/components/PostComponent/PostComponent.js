@@ -111,7 +111,7 @@ export default function PostComponent(props) {
                     <Divider light />
                     {/* 댓글달기 */}
                     {/* onSubmit={} */}
-                    <Grid container spacing={2} justifyContent="flex-start"  sx={{px:2}}>
+                    <Grid container justifyContent="flex-start"  sx={{px:2}}>
                         <Grid item xs={6} md={8}>
                             <TextField
                                 margin="normal"
@@ -141,52 +141,56 @@ export default function PostComponent(props) {
                     </Grid>
 
                     {/* 댓글 목록*/}
-                    {comments.map((comment,index) => (
-                        <Paper style={{ padding: "10px 20px", marginTop:10 }} key={comment.c_id}>
-                            <Grid container wrap="nowrap" spacing={2}>
-                                <Grid item>
-                                    <Link component={RouterLink} to={{pathname:`/profile/${comment.commentUserID}`}}>
-                                        <Avatar src={comment.profile_img}></Avatar>
-                                    </Link>
-                                    
-                                </Grid>
-                                <Grid item  wrap="nowrap" xs>
-                                    <h4 style={{ margin: 0, textAlign: "left" }}>
-                                        <Link component={RouterLink} to={{pathname:`/profile/${comment.commentUserID}`}} underline="none" style={{color:"black"}}>
-                                            {comment.commentNickname}
+
+                    {
+                        post.c_id !== null 
+                        ? comments.map((comment,index) => (
+
+                            <Paper style={{ padding: "10px 20px", marginTop:10 }} key={comment.c_id}>
+                                <Grid container >
+                                    <Grid item sx={{mr:2}}>
+                                        <Link component={RouterLink} to={{pathname:`/profile/${comment.commentUserID}`}}>
+                                            <Avatar src={comment.profile_img}></Avatar>
                                         </Link>
-                                    </h4>
-                                    {/* 댓글 내용 */}
-
-                                    <Typography  style={{background:"#dcdcdc",display:"inline-block",whiteSpace: 'normal' }} 
-                                                sx={{p:1,mt:1,borderRadius:1,maxWidth:{xs:"300px",md:"500px"},wordWrap:'break-word',boxShadow:"1"}} height="auto" >
-                                        {comment.c_content}
-                                    </Typography>
-
-
-                                    
-                                    <Grid container direction="row"justifyContent="flex-start" alignItems="center" >
-                                        <Typography  sx={{fontWeight:350,fontSize:12,maxWidth:"300px"}}>
-                                            <IconButton sx={{mb:0.5}} disableRipple>   
-                                                    <PetsIcon fontSize="small"  padding="1"/>
-                                            </IconButton>   
-                                            {comment.c_like_count}
-                                        </Typography> 
-                                        <Typography  sx={{fontWeight:"100",fontSize:12, px:2}}>
-                                            댓글 달기
-                                        </Typography>       
-                                        <p style={{ textAlign: "left", color: "gray", fontSize:"15px"}}>
-                                            {comment.c_created_date}
-                                        </p>                                   
+                                        
+                                    </Grid>
+                                    <Grid item  wrap="nowrap" xs>
+                                        <h4 style={{ margin: 0, textAlign: "left" }}>
+                                            <Link component={RouterLink} to={{pathname:`/profile/${comment.commentUserID}`}} underline="none" style={{color:"black"}}>
+                                                {comment.commentNickname}
+                                            </Link>
+                                        </h4>
+                                        {/* 댓글 내용 */}
+    
+                                        <Typography  style={{background:"#dcdcdc",display:"inline-block",whiteSpace: 'normal' }} 
+                                                    sx={{p:1,mt:1,borderRadius:1,maxWidth:{xs:"300px",md:"500px"},wordWrap:'break-word',boxShadow:"1"}} height="auto" >
+                                            {comment.c_content}
+                                        </Typography>
+    
+    
+                                        
+                                        <Grid container direction="row"justifyContent="flex-start" alignItems="center" >
+                                            <Typography  sx={{fontWeight:350,fontSize:12,maxWidth:"300px"}}>
+                                                <IconButton sx={{mb:0.5}} disableRipple>   
+                                                        <PetsIcon fontSize="small"  padding="1"/>
+                                                </IconButton>   
+                                                {comment.c_like_count}
+                                            </Typography> 
+                                            <Typography  sx={{fontWeight:"100",fontSize:12, px:2}}>
+                                                댓글 달기
+                                            </Typography>       
+                                            <p style={{ textAlign: "left", color: "gray", fontSize:"15px"}}>
+                                                {comment.c_created_date}
+                                            </p>                                   
+                                        </Grid>
                                     </Grid>
                                 </Grid>
-                            </Grid>
-                        </Paper>
-                    ))}
-                    
-
-                
-                
+                            </Paper>
+                            )) : <div></div>
+                    }
+                    {
+                        
+                    }
             </Card>
         </Container>
     )
