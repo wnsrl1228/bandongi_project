@@ -13,9 +13,11 @@ import {
     Divider,
     Link,
     CardActionArea,
-    Box
+    Box,
+    Button
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import PetsIcon from '@mui/icons-material/Pets';
 import axios from "axios";
 import { Link as RouterLink} from "react-router-dom";
@@ -36,6 +38,7 @@ export default function ProfileComponent(props) {
     const [profileImg, setProfileImg] = useState("")
     const [title, setTitle] = useState("")
     const [profileContent, setProfileContent] = useState("")
+    const [address, setAddress] = useState("")
 
     useEffect(() => {
         const fecthPost = async () => {
@@ -48,6 +51,7 @@ export default function ProfileComponent(props) {
                 setProfileImg(res.data[0].profile_img);
                 setTitle(res.data[0].title);
                 setProfileContent(res.data[0].profile_content);
+                setAddress(res.data[0].address);
                
             } catch (err){
                 alert(err);
@@ -70,11 +74,29 @@ export default function ProfileComponent(props) {
                         <Avatar src={profileImg} sx={{boxShadow:3}}style={{width:"100px",height:"100px",border: '5px solid white'}}></Avatar>
                     </Link>
                 </Grid>
-                <Grid item  sx={{ml:2}}>
-                  <Typography  variant="h4" fontWeight="Bold" >
-                    {nickname}
+                <Grid item  sx={{ml:2,mt: {xs:2}}} xs={10}  sm={7} md={8} lg={9}>
+                    <Grid container justifyContent="space-between">
+                        <Grid item>
+                            <Typography  variant="h4" fontWeight="Bold" >
+                                {nickname}
+                            </Typography>
+                        </Grid>
+                        <Grid item>
+                            <Typography  >
+                                <Button variant="outlined" component={RouterLink} to="/profile/edit">
+                                    <ManageAccountsIcon/>&nbsp; 프로필 수정
+                                </Button>
+                            </Typography>
+                        </Grid>
+                    </Grid>
+
+                </Grid>
+                <Grid item  sx={{ml:3,mt:4}} xs={12}>
+                  <Typography  variant="h5" fontWeight="Bold" >
+                    사는 곳 : {address}
                   </Typography>
                 </Grid>
+                
                 <Grid item  sx={{ml:3,mt:4,mb:-3}} xs={12}>
                   <Typography  variant="h5" fontWeight="Bold" >
                     자기소개

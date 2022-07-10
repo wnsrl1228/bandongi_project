@@ -112,7 +112,7 @@ export default function PostComponent(props) {
                     {/* 댓글달기 */}
                     {/* onSubmit={} */}
                     <Grid container justifyContent="flex-start"  sx={{px:2}}>
-                        <Grid item xs={6} md={8}>
+                        <Grid item xs={6} md={8} pr={2}>
                             <TextField
                                 margin="normal"
                                 name="userId"
