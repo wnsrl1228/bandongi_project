@@ -26,7 +26,6 @@ export default function ProfileUpdateComponent() {
           try{
               const url = "/user/edit/";
               const res = await axios.get(url);
-              console.log(res.data);
               setUserId(res.data.userId);
               setNickname(res.data.nickname);
               setProfileImg(res.data.profile_img);
@@ -49,7 +48,7 @@ export default function ProfileUpdateComponent() {
     const onProfileImgHandler = (e) => {
       setProfileImg(e.currentTarget.value);
     }
-    const onaddressHandler = (e) => {
+    const onAddressHandler = (e) => {
       setAddress(e.currentTarget.value);
     } 
     const onProfileContentHandler = (e) => {
@@ -59,7 +58,6 @@ export default function ProfileUpdateComponent() {
 
 
     const handleSubmit = (e) => {
-      e.preventDefault();
       
       const body = {
           nickname: nickname,
@@ -103,10 +101,11 @@ export default function ProfileUpdateComponent() {
                         <Grid container justifyContent="space-between">
                             <Grid item>
                             <TextField
-                              defaultValue={nickname}
+                              value={nickname || ''}
                               margin="normal"
                               label="닉네임"
                               fullWidth
+                              multiline
                               required 
                               onChange ={onNicknameHandler}
                               autoComplete='off'
@@ -124,8 +123,9 @@ export default function ProfileUpdateComponent() {
                               fullWidth
                               size="small"
                               required 
-                              defaultValue={address}
-                              onChange ={onaddressHandler}
+                              multiline
+                              value={address || ''}
+                              onChange ={onAddressHandler}
                               autoComplete='off'
                               sx={{width:"auto",ml:2,mt:0}}
                             />
@@ -143,7 +143,7 @@ export default function ProfileUpdateComponent() {
                         <Typography  variant="h6"  >
                         <TextField
                               margin="normal"
-                              defaultValue={profileContent}
+                              value={profileContent || ''}
                               onChange = {onProfileContentHandler}
                               autoComplete='off'
                               fullWidth
