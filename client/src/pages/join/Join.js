@@ -57,11 +57,9 @@ export default function Join() {
             email: email,
             username: username,
             nickname: nickname,
-            token : sessionStorage.getItem('token')
         }
         axios.post("/auth/join",body)
             .then( (res) => {
-                console.log(res)
                 if (res.data.success){
                     alert("회원가입에 성공하셨습니다.");
                     navigate('/login');

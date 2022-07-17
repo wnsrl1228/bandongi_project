@@ -51,17 +51,27 @@ router.get('/profile/:id', isLoggedIn, async (req, res, next) => {
         return next(error);
     }
 });
-// 유저 프로필 변경 페이지 불러오기 get
+// 유저 프로필 변경 페이지 불러오기 get +
 router.get('/edit', isLoggedIn, async (req, res, next) => {
-    const {nickname, profile_content, profile_img, address } = req.user
-    return res.status(200).json({
-        "nickname": nickname,
-        "profile_content": profile_content,
-        "profile_img": profile_img,
-        "address": address
-    }); //추후 변경
+    const userId = req.user.id
+    try {
+        // DB에 유저 프로필 가져오기
+        const [dbUserProfile] = await pool.execute(
+            `SELECT id userId, nickname, address, profile_content, profile_img
+            FROM user WHERE id = ? `,
+            [userId]
+        );
+        if ( dbUserProfile.length == 0){
+            return next(error);
+        }
+        return res.status(201).json(dbUserProfile[0]); // 수정된 프로필로 이동 --> 추후 변경
+    } catch (error) {
+        console.log(error);
+        
+    }
 });
-// 유저 프로필 변경하기 patch
+
+// 유저 프로필 변경하기 patch +
 router.patch('/edit', isLoggedIn, async (req, res, next) => {
     const {nickname, profile_content, profile_img, address} = req.body
     const userId = req.user.id
@@ -71,7 +81,7 @@ router.patch('/edit', isLoggedIn, async (req, res, next) => {
             `UPDATE user SET nickname=?, profile_content=?, profile_img=?, address=? where id=?`,
             [nickname, profile_content, profile_img, address, userId ]
         );
-        return res.sendFile(path.resolve('views/testChangeProfile.html')); // 수정된 프로필로 이동 --> 추후 변경
+        return res.status(200).json({"success":"성공"})// 수정된 프로필로 이동 --> 추후 변경
     } catch (error) {
         console.log(error);
         return next(error);

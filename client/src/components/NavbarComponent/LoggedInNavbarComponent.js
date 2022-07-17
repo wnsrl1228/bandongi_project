@@ -86,6 +86,10 @@ export default function LoggedInNavbarComponent() {
             })
     }
 
+    const isProfileUpdatePage =() => {
+
+    }
+
     const renderMobileMenu = (
         <Menu
             anchorEl={anchorE1}
@@ -109,10 +113,12 @@ export default function LoggedInNavbarComponent() {
             }}
         >
             <MenuItem>
-                <ListItemIcon>
-                    <PersonIcon fontSize="small" /> 
-                </ListItemIcon>
-                프로필 수정
+                <Link component={RouterLink} to="/profile/edit" underline="none" style={{color:"black"}} >
+                    <ListItemIcon>
+                        <PersonIcon fontSize="small" /> 
+                    </ListItemIcon>
+                    프로필 수정
+                </Link>
             </MenuItem>
             <MenuItem>
                 <ListItemIcon>

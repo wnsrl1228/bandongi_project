@@ -13,7 +13,7 @@ router.get('/', (req, res, next) => {
 //회원가입
 router.post('/join', isNotLoggedIn, async (req,res,next) => {
 
-    const { userId, email, password, username, nickname, token } = req.body;
+    const { userId, email, password, username, nickname } = req.body;
 
     try {
         //아이디가 이미 존해하는지 조회 

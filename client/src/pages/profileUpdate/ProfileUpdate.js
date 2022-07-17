@@ -5,11 +5,8 @@ import ProfileUpdateComponent from "../../components/ProfileUpdateComponent/Prof
 import { 
     Grid,
 } from '@mui/material';
-import { useParams } from 'react-router-dom';
-export default function ProfileUpdate() {
 
-    //POST 아이디
-    const { id } = useParams();
+export default function ProfileUpdate() {
 
     return (
         <React.Fragment >
@@ -19,7 +16,7 @@ export default function ProfileUpdate() {
                     <SidebarComponent/>
                 </Grid>
                 <Grid item backgroundColor="#f0f2f5"  md >
-                    <ProfileComponent/>
+                    <ProfileUpdateComponent/>
                 </Grid>
             </Grid>
 

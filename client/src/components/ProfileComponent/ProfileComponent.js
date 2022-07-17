@@ -61,6 +61,19 @@ export default function ProfileComponent(props) {
         fecthPost();
     },[]);
 
+    // 자신의 프로필일 경우에만 프로필수정 버튼이 보임
+    const isMyProfile = () => {
+        if (userId == sessionStorage.getItem('token')){
+            return <Grid item>
+                        <Typography  >
+                            <Button variant="outlined" component={RouterLink} to="/profile/edit">
+                                <ManageAccountsIcon/>&nbsp; 프로필 수정
+                            </Button>
+                        </Typography>
+                   </Grid>;
+        }
+        return ;
+    }
 
     return (
         <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:100}} >
@@ -81,13 +94,7 @@ export default function ProfileComponent(props) {
                                 {nickname}
                             </Typography>
                         </Grid>
-                        <Grid item>
-                            <Typography  >
-                                <Button variant="outlined" component={RouterLink} to="/profile/edit">
-                                    <ManageAccountsIcon/>&nbsp; 프로필 수정
-                                </Button>
-                            </Typography>
-                        </Grid>
+                        {isMyProfile()}
                     </Grid>
 
                 </Grid>
