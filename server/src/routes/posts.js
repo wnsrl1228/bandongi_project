@@ -32,6 +32,24 @@ router.post('/create', isLoggedIn, async (req,res,next) => {
     }
 });
 
+
+//  게시글 댓글 추가하기
+router.post('/comment', isLoggedIn, async (req, res, next) => {
+    const {post_id, content} = req.body;
+    const userId = req.user.id;
+    try {
+        // DB에 댓글 추가하기
+        await pool.execute(
+            `INSERT INTO comment(user_id, post_id, content)  VALUES (?, ?, ?);`,
+            [userId, post_id, content]
+        );
+        return res.status(200).json({"success":"성공"});
+    } catch (error) {
+        console.log(error);
+        return next(error);
+    }
+});
+
 // 카테고리 페이지 불러오기  get /post/:category
 // 무한 스크롤 , 페이징  --> 추후 구현
 router.get('/:category', async (req, res, next) => {

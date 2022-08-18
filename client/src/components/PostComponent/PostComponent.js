@@ -22,15 +22,22 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PetsIcon from '@mui/icons-material/Pets';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import axios from "axios";
-import { Link as RouterLink} from "react-router-dom";
+import { Link as RouterLink,useNavigate} from "react-router-dom";
 import { Box } from '@mui/system';
 import dog1 from '../MainComponent/sample/dog1.jpg';
 const hello=[dog1];
 export default function PostComponent(props) {
+
+    const navigate = useNavigate();
     
     const post_id = props.post_id;
-    const [post, setPost] = useState([])
-    const [comments, setComments] = useState([])
+    const [post, setPost] = useState([]);
+    const [comments, setComments] = useState([]);
+
+    //댓글 관련 변수
+    const [commentContent, setCommentContent] = useState('');
+
+    // post페이지의 데이터 불러오기
     useEffect(() => {
         const fecthPost = async () => {
             try{
@@ -42,11 +49,28 @@ export default function PostComponent(props) {
             } catch (err){
                 alert(err);
             }
-            
         }
         fecthPost();
     },[]);
 
+
+    const onCommentContentHandler = (e) => {
+        setCommentContent(e.currentTarget.value);
+      } 
+    
+    // 댓글 등록하기
+    const commentSubmit = (e) => {
+        
+        const body = {
+            post_id: post_id,
+            content : commentContent,
+        }
+        console.log(body);
+        axios.post("/post/comment",body)
+            .catch( (err) => {
+                alert("다시 시도해주세요.");
+            })
+      };
 
     return (
         <Container  maxWidth="md" sx={{mt: 20,mb:100}}>
@@ -111,6 +135,7 @@ export default function PostComponent(props) {
                     <Divider light />
                     {/* 댓글달기 */}
                     {/* onSubmit={} */}
+                    <Box component="form"  onSubmit={commentSubmit} sx={{ mt: 3 }}>
                     <Grid container justifyContent="flex-start"  sx={{px:2}}>
                         <Grid item xs={6} md={8} pr={2}>
                             <TextField
@@ -120,6 +145,7 @@ export default function PostComponent(props) {
                                 required 
                                 fullWidth
                                 autoComplete='off'
+                                onChange ={onCommentContentHandler}
                                 sx={{ mb:-1 }}
                                 InputProps={{
                                     startAdornment: (
@@ -139,7 +165,7 @@ export default function PostComponent(props) {
                             </Button>
                         </Grid>
                     </Grid>
-
+                    </Box>
                     {/* 댓글 목록*/}
 
                     {
