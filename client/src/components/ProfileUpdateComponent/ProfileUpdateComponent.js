@@ -62,10 +62,10 @@ export default function ProfileUpdateComponent() {
       const body = {
           nickname: nickname,
           address : address,
-          profileContent : profileContent,
-          profileImg:profileImg
+          profile_content : profileContent,
+          profile_img:profileImg
       }
-
+      console.log(body);
       axios.patch("/user/edit",body)
           .then( (res) => {
               if (res.data.success){
