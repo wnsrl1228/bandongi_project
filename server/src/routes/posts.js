@@ -43,6 +43,11 @@ router.post('/comment', isLoggedIn, async (req, res, next) => {
             `INSERT INTO comment(user_id, post_id, content)  VALUES (?, ?, ?);`,
             [userId, post_id, content]
         );
+        // 게시글 comment_count 증가
+        await pool.execute(
+            `UPDATE post SET comment_count = comment_count + 1 WHERE id = ?;`,
+            [post_id]
+        );
         return res.status(200).json({"success":"성공"});
     } catch (error) {
         console.log(error);
