@@ -52,12 +52,14 @@ export default function LoggedInNavbarComponent() {
 
     //로그인 정보
     const [user, setUser] = useState([]);
+    const [userId, setUserId] = useState([]);
     const [profileImage, setProfileImage] = useState([]); //추후 기능 구현
     useEffect(() => {
         const fecthUser = async () => {
             try{
                 const res = await axios.get("/user/information");
                 setUser(res.data[0].nickname);
+                setUserId(res.data[0].id);
             } catch (err){
                 alert(err);
             }
@@ -121,10 +123,12 @@ export default function LoggedInNavbarComponent() {
                 </Link>
             </MenuItem>
             <MenuItem>
-                <ListItemIcon>
-                    <EditIcon fontSize="small" />
-                </ListItemIcon>
-                글 관리
+                <Link component={RouterLink} to={{pathname:`/profile/${userId}`}}underline="none" style={{color:"black"}}>
+                    <ListItemIcon>
+                        <EditIcon fontSize="small" />
+                    </ListItemIcon>    
+                    글 관리                 
+                </Link>
             </MenuItem>
             <MenuItem>
                 <ListItemIcon>

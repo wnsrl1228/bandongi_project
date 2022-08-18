@@ -12,7 +12,7 @@ router.get('/information', isLoggedIn, async (req, res, next) => {
     try {
         // DB에 해당 id 유저의 정보랑 게시글 불러오기
         const [dbInformation] = await pool.execute(
-            `SELECT nickname FROM user WHERE id = ?;`,
+            `SELECT id, nickname FROM user WHERE id = ?;`,
             [userId]
         );
         if (Array.isArray(dbInformation) && dbInformation.length == 0) {
