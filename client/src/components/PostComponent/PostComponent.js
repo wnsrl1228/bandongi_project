@@ -29,7 +29,7 @@ const hello=[dog1];
 export default function PostComponent(props) {
 
     const navigate = useNavigate();
-    
+
     const post_id = props.post_id;
     const [post, setPost] = useState([]);
     const [comments, setComments] = useState([]);
@@ -170,7 +170,7 @@ export default function PostComponent(props) {
 
                     {
                         post.c_id !== null 
-                        ? comments.map((comment,index) => (
+                        ? comments.slice(0).reverse().map((comment,index) => (
 
                             <Paper style={{ padding: "10px 20px", marginTop:10 }} key={comment.c_id}>
                                 <Grid container >
