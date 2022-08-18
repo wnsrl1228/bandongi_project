@@ -33,7 +33,7 @@ router.post('/create', isLoggedIn, async (req,res,next) => {
 });
 
 
-//  게시글 댓글 추가하기
+//  게시글 댓글 추가하기 
 router.post('/comment', isLoggedIn, async (req, res, next) => {
     const {post_id, content} = req.body;
     const userId = req.user.id;
@@ -54,6 +54,24 @@ router.post('/comment', isLoggedIn, async (req, res, next) => {
         return next(error);
     }
 });
+
+//  게시글 추천 체크 여부 확인 
+router.get('/like/valid/:id', isLoggedIn, async (req, res, next) => {
+    const post_id = req.params.id;
+    const userId = req.user.id;
+    try {
+        // DB에 댓글 추가하기
+        const [likeValid] = await pool.execute(
+            `SELECT count(user_id) as valid FROM post_like where user_id=? AND post_id =?;`,
+            [userId, post_id]
+        );
+        return res.status(200).json(likeValid);
+    } catch (error) {
+        console.log(error);
+        return next(error);
+    }
+});
+
 
 // 카테고리 페이지 불러오기  get /post/:category
 // 무한 스크롤 , 페이징  --> 추후 구현

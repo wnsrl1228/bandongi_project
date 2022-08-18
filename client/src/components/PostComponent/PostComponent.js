@@ -33,22 +33,35 @@ export default function PostComponent(props) {
     const post_id = props.post_id;
     const [post, setPost] = useState([]);
     const [comments, setComments] = useState([]);
+    const [likeValid, setLikeValid] = useState(''); // 댓글 추천수 유효성 체크
 
     //댓글 관련 변수
     const [commentContent, setCommentContent] = useState('');
 
-    // post페이지의 데이터 불러오기
+    
     useEffect(() => {
         const fecthPost = async () => {
+
+            // post페이지의 데이터 불러오기
             try{
                 const url = "/post/" + post_id;
                 const res = await axios.get(url);
                 setComments(res.data)
                 setPost(res.data[0]);
-
             } catch (err){
                 alert(err);
             }
+
+            // 추천 유효성 api 요청
+            try{
+                const url = "/post/like/valid/" + post_id;
+                const res = await axios.get(url);
+                setLikeValid(res.data[0].valid);
+            } catch (err){
+                alert(err);
+            }
+
+
         }
         fecthPost();
     },[]);
@@ -119,14 +132,23 @@ export default function PostComponent(props) {
                     </CardContent>
                     <Divider light />
 
+                    {/* 게시글 추천수랑 댓글 */}
                     <CardActions disableSpacing >
                         <Grid container direction="row"justifyContent="flex-start" alignItems="center" >
                             <Typography  sx={{fontWeight:350,fontSize:14}}>
-                                <IconButton sx={{mb:0.5}} disableRipple>   
+                            {
+                                likeValid == 0
+                                ? <IconButton sx={{mb:0.5}} disableRipple>   
                                         <PetsIcon fontSize="small"  padding="1"/>
-                                </IconButton>   
-                                {post.p_like_count}
+                                  </IconButton>  
+                                : <IconButton sx={{mb:0.5}} disableRipple style={{color:"#ff7961"}}>   
+                                        <PetsIcon fontSize="small"  padding="1"/>
+                                  </IconButton> 
+                            }
+                            {post.p_like_count}
+                                
                             </Typography> 
+
                             <Typography  sx={{fontWeight:"100",fontSize:14, pl:2}}>
                                 댓글 {post.comment_count}
                             </Typography>                                          
