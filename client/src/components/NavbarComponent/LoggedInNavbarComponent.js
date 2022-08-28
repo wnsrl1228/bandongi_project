@@ -115,7 +115,7 @@ export default function LoggedInNavbarComponent() {
             }}
         >
             <MenuItem>
-                <Link component={RouterLink} to="/profile/edit" underline="none" style={{color:"black"}} >
+                <Link component={RouterLink} to="/profile/edit"  underline="none" style={{color:"black"}} >
                     <ListItemIcon>
                         <PersonIcon fontSize="small" /> 
                     </ListItemIcon>
@@ -123,7 +123,7 @@ export default function LoggedInNavbarComponent() {
                 </Link>
             </MenuItem>
             <MenuItem>
-                <Link component={RouterLink} to={{pathname:`/profile/${userId}`}}underline="none" style={{color:"black"}}>
+                <Link onClick={() => {window.location.href=`/profile/${userId}`}} underline="none" style={{color:"black"}}>
                     <ListItemIcon>
                         <EditIcon fontSize="small" />
                     </ListItemIcon>    

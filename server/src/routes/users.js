@@ -9,6 +9,7 @@ const { isLoggedIn, isNotLoggedIn} = require('./middlewares');
 // 해당 id의 user 프로필 페이지 불러오기
 router.get('/information', isLoggedIn, async (req, res, next) => {
     const userId = req.user.id
+    console.log(userId);
     try {
         // DB에 해당 id 유저의 정보랑 게시글 불러오기
         const [dbInformation] = await pool.execute(

@@ -57,6 +57,7 @@ export default function MainComponent() {
                                 avatar={
                                     <Link component={RouterLink} to={{pathname:`/profile/${post.userId}`}}>
                                         <Avatar src={post.profile_img}></Avatar>
+                            
                                     </Link>
                                     
                                 }
