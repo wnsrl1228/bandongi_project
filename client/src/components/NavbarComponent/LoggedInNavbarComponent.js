@@ -134,13 +134,13 @@ export default function LoggedInNavbarComponent() {
                 <ListItemIcon>
                     <GroupIcon fontSize="small" />
                 </ListItemIcon>
-                친구 목록
+                    친구 목록
             </MenuItem>
             <MenuItem onClick={isLogout}>
                 <ListItemIcon>
                     <Logout fontSize="small" />
                 </ListItemIcon>
-                로그아웃
+                    로그아웃
             </MenuItem>
         </Menu>
     );

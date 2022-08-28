@@ -12,6 +12,7 @@ import {
     IconButton,
     Divider,
     Link,
+    Button,
     CardActionArea,
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -48,6 +49,11 @@ export default function MainComponent() {
 
     return (
         <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:100}} >
+            <Grid container justifyContent="flex-end">
+                <Button type="submit" variant="contained" sx={{mb:5 ,mr:5}} size="large">
+                    게시물 작성
+                </Button>
+            </Grid>
             <Grid container spacing={2} justifyContent="space-evenly">
                 {posts.map((post,index) => (
                     <Grid item xs={12} sm={6} md={4} key={post.id}
@@ -76,23 +82,37 @@ export default function MainComponent() {
                             /><Divider light />
                             <CardActionArea component={RouterLink} to={{pathname:`/post/${post.id}`}}>
                                 <CardContent sx={{p:1,pl:2,pr:1}}>
-                                    <Typography gutterBottom variant="body1" component="div" fontWeight="bold">
+                                    <Typography gutterBottom variant="body1" component="div" fontWeight="bold"
+                                        sx={{
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                            display: "-webkit-box",
+                                            WebkitLineClamp: "1",
+                                            WebkitBoxOrient: "vertical",
+                                        }}>
                                         {post.title}
                                     </Typography>
                                 </CardContent>
                                 <CardMedia
                                     component="img"
                                     sx={{
-                                        height:"194",
+                                        height:"190px",
                                     // 16:9
-                                    // pt: '56.25%',
+                                    // pt: '60.25%',
                                     }}
                                     image={hello[index]}
                                     alt="random"
                                 />
                             
                                 <CardContent>
-                                    <Typography variant="body2" gutterBottom>
+                                    <Typography variant="body2" gutterBottom 
+                                        sx={{
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                            display: "-webkit-box",
+                                            WebkitLineClamp: "2",
+                                            WebkitBoxOrient: "vertical",
+                                        }}>
                                         {post.content}
                                     </Typography>
                                 </CardContent>

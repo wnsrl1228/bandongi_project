@@ -10,33 +10,43 @@ import PrivateRoute from "./utils/PrivateRoute";
 import ScrollToTop from './utils/ScrollToTop';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
+import { createTheme, ThemeProvider } from "@mui/material";
+
+const theme = createTheme({
+  typography: {
+    fontFamily: "GmarketSansMedium"
+  }
+});
 function App() {
   return (
-    <Router>
-      <ScrollToTop/>
-      <Routes>
-        {/* <Route path="/" element={<Home/>}/> */}
-        {/* <Route path="/" element={<Home/>}/> */}
+    <ThemeProvider theme={theme}>
+      <Router>
+        <ScrollToTop/>
+        <Routes>
+          {/* <Route path="/" element={<Home/>}/> */}
+          {/* <Route path="/" element={<Home/>}/> */}
 
-        <Route exact path="/" element={<Home/>}/>
+          <Route exact path="/" element={<Home/>}/>
 
-        <Route exact path="/post/:id" element={ <PrivateRoute restricted={true}/>}>
-          <Route exact path="/post/:id" element={<Post/>} />
-        </Route>
-        <Route exact path="/profile/edit" element={ <PrivateRoute restricted={true}/>}>
-          <Route exact path="/profile/edit" element={<ProfileUpdate/>} />
-        </Route>
-        <Route exact path="/profile/:id" element={ <PrivateRoute restricted={true}/>}>
-          <Route exact path="/profile/:id" element={<Profile/>} />
-        </Route>
-        <Route exact path="/login" element={ <PublicRoute restricted={true}/>}>
-          <Route exact path="/login" element={<Login/>} />
-        </Route>
-        {/* <PublicRoute restricted={false} component={Home} path="/" exact /> */}
-        <Route path="/login" element={<Login/>}/>
-        <Route path="/join" element={<Join/>}/>
-      </Routes>
-    </Router>
+          <Route exact path="/post/:id" element={ <PrivateRoute restricted={true}/>}>
+            <Route exact path="/post/:id" element={<Post/>} />
+          </Route>
+          <Route exact path="/profile/edit" element={ <PrivateRoute restricted={true}/>}>
+            <Route exact path="/profile/edit" element={<ProfileUpdate/>} />
+          </Route>
+          <Route exact path="/profile/:id" element={ <PrivateRoute restricted={true}/>}>
+            <Route exact path="/profile/:id" element={<Profile/>} />
+          </Route>
+          <Route exact path="/login" element={ <PublicRoute restricted={true}/>}>
+            <Route exact path="/login" element={<Login/>} />
+          </Route>
+          {/* <PublicRoute restricted={false} component={Home} path="/" exact /> */}
+          <Route path="/login" element={<Login/>}/>
+          <Route path="/join" element={<Join/>}/>
+        </Routes>
+      </Router>
+    </ThemeProvider>
+    
   )
 }
 
