@@ -85,9 +85,16 @@ export default function PostComponent(props) {
     };
     
     const plueMinusLike = (e) => {
+
+        if (post.userId == sessionStorage.getItem('token')) {
+            alert("자신의 글은 추천할 수 없습니다.")
+            return;
+        }
+
         const body = {
             post_id: post_id,
         }
+        
 
         if (likeValid == 0) {
             axios.post("/post/like/plus",body)
