@@ -65,7 +65,6 @@ export default function ProfileUpdateComponent() {
           profile_content : profileContent,
           profile_img:profileImg
       }
-      console.log(body);
       axios.patch("/user/edit",body)
           .then( (res) => {
               if (res.data.success){

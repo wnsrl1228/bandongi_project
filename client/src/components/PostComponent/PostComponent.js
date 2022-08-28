@@ -76,14 +76,42 @@ export default function PostComponent(props) {
         
         const body = {
             post_id: post_id,
-            content : commentContent,
         }
-        console.log(body);
+
         axios.post("/post/comment",body)
             .catch( (err) => {
                 alert("다시 시도해주세요.");
             })
-      };
+    };
+    
+    const plueMinusLike = (e) => {
+        const body = {
+            post_id: post_id,
+        }
+
+        if (likeValid == 0) {
+            axios.post("/post/like/plus",body)
+            .then((res) => {
+                setLikeValid(likeValid+1);
+                post.p_like_count++;
+            })
+            .catch((err) => {
+                alert("다시 시도해주세요.");
+            })
+
+        } else {
+            axios.post("/post/like/minus",body)
+                .then((res) => {
+                    setLikeValid(likeValid-1);
+                    post.p_like_count--;
+                })
+                .catch( (err) => {
+                    alert("다시 시도해주세요.");
+                })
+        }
+
+    }
+
 
     return (
         <Container  maxWidth="md" sx={{mt: 20,mb:100}}>
@@ -138,10 +166,10 @@ export default function PostComponent(props) {
                             <Typography  sx={{fontWeight:350,fontSize:14}}>
                             {
                                 likeValid == 0
-                                ? <IconButton sx={{mb:0.5}} disableRipple>   
+                                ? <IconButton onClick={plueMinusLike} sx={{mb:0.5}} disableRipple>   
                                         <PetsIcon fontSize="small"  padding="1"/>
                                   </IconButton>  
-                                : <IconButton sx={{mb:0.5}} disableRipple style={{color:"#ff7961"}}>   
+                                : <IconButton sx={{mb:0.5}} onClick={plueMinusLike} disableRipple style={{color:"#ff7961"}}>   
                                         <PetsIcon fontSize="small"  padding="1"/>
                                   </IconButton> 
                             }

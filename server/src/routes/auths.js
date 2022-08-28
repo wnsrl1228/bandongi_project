@@ -22,8 +22,7 @@ router.post('/join', isNotLoggedIn, async (req,res,next) => {
         //이미 존재하는 아이디인지 체크
         if (Array.isArray(dbUser) && dbUser.length > 0) {
             for (let i=0; i<dbUser.length; i++){
-                console.log(dbUser);
-                console.log(dbUser[i]);
+
                 if (userId === dbUser[i].userId) {
                     message = "이미 존재하는 아이디입니다";
                     break;

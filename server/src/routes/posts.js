@@ -55,6 +55,38 @@ router.post('/comment', isLoggedIn, async (req, res, next) => {
     }
 });
 
+//  게시글 추천 추가 
+router.post('/like/plus', isLoggedIn, async (req, res, next) => {
+    const {post_id} = req.body
+    const userId = req.user.id;
+    try {
+        // DB에 댓글 추가하기
+        await pool.execute(
+            `INSERT INTO post_like (user_id, post_id) VALUES (?, ?);`,
+            [userId, post_id]
+        );
+
+        return res.status(200).json({"success":"성공"});
+    } catch (error) {
+        return next(error);
+    }
+});
+//  게시글 추천 취소
+router.post('/like/minus', isLoggedIn, async (req, res, next) => {
+    const {post_id} = req.body
+    const userId = req.user.id;
+    
+    try {
+        // DB에 댓글 추가하기
+        await pool.execute(
+            `DELETE FROM post_like WHERE user_id = ? AND post_id = ?;`,
+            [userId, post_id]
+        );
+        return res.status(200).json({"success":"성공"});
+    } catch (error) {
+        return next(error);
+    }
+});
 //  게시글 추천 체크 여부 확인 
 router.get('/like/valid/:id', isLoggedIn, async (req, res, next) => {
     const post_id = req.params.id;
@@ -71,7 +103,6 @@ router.get('/like/valid/:id', isLoggedIn, async (req, res, next) => {
         return next(error);
     }
 });
-
 
 // 카테고리 페이지 불러오기  get /post/:category
 // 무한 스크롤 , 페이징  --> 추후 구현
