@@ -2,31 +2,29 @@ import React, { useState,useEffect} from 'react';
 
 import { 
     Grid,
-    Card,
-    CardMedia,
-    Container,
     Typography,
-    CardActions,
-    CardContent,
-    CardHeader,
-    Avatar,
-    IconButton,
-    Divider,
     Link,
     TextField,
     Button,
-    InputAdornment,
-    Paper
+    InputLabel,
+    MenuItem,
+    FormControl,
+    Select,
+    Container
 } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import PetsIcon from '@mui/icons-material/Pets';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import axios from "axios";
 import { Link as RouterLink,useNavigate} from "react-router-dom";
 import { Box } from '@mui/system';
-import dog1 from '../MainComponent/sample/dog1.jpg';
-const hello=[dog1];
+
 export default function PostComponent(props) {
+
+    //카테고리  시작
+    const [age, setAge] = React.useState('');
+
+    const handleChange = (event) => {
+      setAge(event.target.value);
+    };
+    //카테고리  끝
 
     const navigate = useNavigate();
 
@@ -67,110 +65,107 @@ export default function PostComponent(props) {
     },[]);
 
 
-    const onCommentContentHandler = (e) => {
-        setCommentContent(e.currentTarget.value);
-      } 
-    
-    // 댓글 등록하기
-    const commentSubmit = (e) => {
-        if (commentContent === '') {
-            alert("내용을 입력해주세요");
-            return;
-        }
-        const body = {
-            post_id: post_id,
-            content: commentContent
-        }
+    const handleSubmit = (e) => {
+      
+      const body = {
 
-        axios.post("/post/comment",body)
-            .catch( (err) => {
-                alert("다시 시도해주세요.");
-            })
+      }
+      // axios.patch("/user/edit",body)
+      //     .then( (res) => {
+      //         if (res.data.success){
+      //             alert("프로필이 변경되었습니다.");
+      //             navigate('/profile/edit');
+      //         } else{
+      //             alert(res.data.message);
+      //             navigate("/");
+      //         }
+      //     }).catch( (err) => {
+      //         alert("다시 시도해주세요.");
+      //         navigate("/profile/edit");
+      //     })
     };
-    
-    const plueMinusLike = (e) => {
 
-        if (post.userId == sessionStorage.getItem('token')) {
-            alert("자신의 글은 추천할 수 없습니다.")
-            return;
-        }
-
-        const body = {
-            post_id: post_id,
-        }
-        
-
-        if (likeValid == 0) {
-            axios.post("/post/like/plus",body)
-            .then((res) => {
-                setLikeValid(likeValid+1);
-                post.p_like_count++;
-            })
-            .catch((err) => {
-                alert("다시 시도해주세요.");
-            })
-
-        } else {
-            axios.post("/post/like/minus",body)
-                .then((res) => {
-                    setLikeValid(likeValid-1);
-                    post.p_like_count--;
-                })
-                .catch( (err) => {
-                    alert("다시 시도해주세요.");
-                })
-        }
-
+    const checkPostCancel = (e) => {
+      var result = window.confirm("정말로 취소하시겠습니까?");
+      if(result){
+        window.location.href ="/";
+      }else{
+          return false;
+      }
     }
-
-
     return (
-        <Container  maxWidth="md" sx={{mt: 20,mb:100}}>
-            <Card sx={{}}>
-                <CardHeader
-                    avatar={
-                        <Link component={RouterLink} to={{pathname:`/profile/${post.userId}`}}>
-                            <Avatar src={post.profile_img}></Avatar>
-                        </Link>
-                    }
-                    action={
-                        <IconButton aria-label="settings">
-                            <MoreVertIcon />
-                        </IconButton>
-                    }
-                    sx={{p:1,pl:2,pr:2}}
-                    title={
-                        <Link component={RouterLink} to={{pathname:`/profile/${post.userId}`}} underline="none" style={{color:"black"}}>
-                            {post.userNickname}
-                        </Link>}
-                    subheader={post.created_date}
-                /><Divider light />
-                
+      <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:100}} >
+      <Container fixed style={{border: '1px solid #d2d2d2',borderRadius:"10px",backgroundColor:"#FFFFFF"}} sx={{p:5,boxShadow:4}}>
+      <Box component="form"  onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Grid container sx={{mb:3,p:2}} alignItems="center">
+              <Grid item sx={{ml:3}} xs={12}>
+                <Typography  variant="h5" fontWeight="Bold" style={{display:"inline-block", margin:"5px"}}>
+                  <span >카테고리 :</span>
+                </Typography>
+                <FormControl sx={{ ml:2 , minWidth: 220 }} size="small">
+                    <InputLabel id="demo-simple-select-label">카테고리를 선택해주세요.</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={age}
+                      label="Age"
+                      onChange={handleChange}
+                    >
+                      <MenuItem value={10}>반려동물 친구 만들기</MenuItem>
+                      <MenuItem value={20}>내 자식 자랑하기</MenuItem>
+                      <MenuItem value={30}>묻고 답하기</MenuItem>
+                      <MenuItem value={30}>꿀팁 전수</MenuItem>
+                    </Select>
+                  </FormControl>
+              </Grid>
+              <Grid item  sx={{ml:3,mt:4}} xs={12}>
+                <Typography  variant="h5" fontWeight="Bold" >
+                  <span style={{display:"inline-block", margin:"5px"}}>제목 :</span>
+                  <TextField
+                        margin="normal"
+                        placeholder="제목을 입력해주세요."
+                        fullWidth
+                        size="small"
+                        required 
+                        multiline
+                        // onChange ={onAddressHandler}
+                        autoComplete='off'
+                        sx={{width:"auto",ml:2,mt:0}}
+                      />
+                </Typography>
+              </Grid>
+              
+              <Grid item  sx={{ml:3,mt:4,mb:-3}} xs={12}>
+                <Typography  variant="h5" fontWeight="Bold" style={{display:"inline-block", margin:"5px"}}>
+                  내용
+                </Typography>
+                <Typography  variant="h6"  >
+                  <TextField
+                        margin="normal"
+                        // onChange = {onProfileContentHandler}
+                        placeholder='내용을 입력해주세요.'
+                        autoComplete='off'
+                        fullWidth
+                        size="small"
+                        required 
+                        multiline
+                        rows={10}
+                        sx={{mt:0}}
+                      />
+                </Typography>
+              </Grid>
 
-                    <CardContent sx={{p:1,pl:2,pr:1}}>
-                        <Typography gutterBottom variant="body1" component="div" fontWeight="bold">
-                            {post.title}
-                        </Typography>
-                    </CardContent>
-                    <CardMedia
-                        component="img"
-                        sx={{
-                            height:"194",
-                        // 16:9
-                        // pt: '56.25%',
-                        }}
-                        image={hello[0]}
-                        
-                        alt="random"
-                    />
-                
-                    <CardContent>
-                        <Typography variant="body2" gutterBottom>
-                            {post.content}
-                        </Typography>
-                    </CardContent>
-                    <Divider light />
-            </Card>
-        </Container>
+              <Grid container  item  xs={12} sx={{mt:4}} justifyContent="flex-end">
+                <Button type="submit" variant="contained" sx={{ mt : 3,mb:2,mr:2}}>
+                        게시물 등록
+                </Button>
+                <Button variant="contained" onClick={checkPostCancel} sx={{ mt : 3,mb:2,mr:2}}>
+                        취소
+                </Button>
+              </Grid>
+          </Grid>
+          </Box>
+      </Container>
+  </Container>
     )
 }
