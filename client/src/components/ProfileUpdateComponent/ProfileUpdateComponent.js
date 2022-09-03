@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 
 import axios from "axios";
-import { Link as RouterLink,useNavigate} from "react-router-dom";
+import { Link as RouterLink} from "react-router-dom";
 
 export default function ProfileUpdateComponent() {
 
@@ -40,8 +40,6 @@ export default function ProfileUpdateComponent() {
         fecthPost();
     },[]);
 
-    const navigate = useNavigate();
-
     const onNicknameHandler = (e) => {
         setNickname(e.currentTarget.value);
     }
@@ -69,14 +67,13 @@ export default function ProfileUpdateComponent() {
           .then( (res) => {
               if (res.data.success){
                   alert("프로필이 변경되었습니다.");
-                  navigate('/profile/edit');
               } else{
-                  alert(res.data.message);
-                  navigate("/");
+                  alert("다시 시도해주세요.");
               }
+              window.location = '/profile/edit';
           }).catch( (err) => {
               alert("다시 시도해주세요.");
-              navigate("/profile/edit");
+              window.location = '/profile/edit';
           })
     };
 

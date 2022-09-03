@@ -13,76 +13,52 @@ import {
     Container
 } from '@mui/material';
 import axios from "axios";
-import { Link as RouterLink,useNavigate} from "react-router-dom";
+import { Link as RouterLink} from "react-router-dom";
 import { Box } from '@mui/system';
 
-export default function PostComponent(props) {
+export default function PostComponent() {
 
-    //카테고리  시작
-    const [age, setAge] = React.useState('');
+    //카테고리
+    const [category, setCategory] = useState('');
+    const [title, setTitle] = useState(''); 
+    const [content, setContent] = useState(''); 
 
     const handleChange = (event) => {
-      setAge(event.target.value);
+      setCategory(event.target.value);
     };
-    //카테고리  끝
+    const onTitleHandler = (e) => {
+      setTitle(e.currentTarget.value);
+    } 
+    const onContentHandler = (e) => {
+      setContent(e.currentTarget.value);
+    } 
 
-    const navigate = useNavigate();
-
-    const post_id = props.post_id;
-    const [post, setPost] = useState([]);
-    const [comments, setComments] = useState([]);
-    const [likeValid, setLikeValid] = useState(''); // 댓글 추천수 유효성 체크
-
-    //댓글 관련 변수
-    const [commentContent, setCommentContent] = useState('');
-
-    
     useEffect(() => {
-        const fecthPost = async () => {
 
-            // post페이지의 데이터 불러오기
-            try{
-                const url = "/post/" + post_id;
-                const res = await axios.get(url);
-                setComments(res.data)
-                setPost(res.data[0]);
-            } catch (err){
-                alert(err);
-            }
-
-            // 추천 유효성 api 요청
-            try{
-                const url = "/post/like/valid/" + post_id;
-                const res = await axios.get(url);
-                setLikeValid(res.data[0].valid);
-            } catch (err){
-                alert(err);
-            }
-
-
-        }
-        fecthPost();
     },[]);
 
 
     const handleSubmit = (e) => {
       
       const body = {
-
-      }
-      // axios.patch("/user/edit",body)
-      //     .then( (res) => {
-      //         if (res.data.success){
-      //             alert("프로필이 변경되었습니다.");
-      //             navigate('/profile/edit');
-      //         } else{
-      //             alert(res.data.message);
-      //             navigate("/");
-      //         }
-      //     }).catch( (err) => {
-      //         alert("다시 시도해주세요.");
-      //         navigate("/profile/edit");
-      //     })
+        title: title,
+        content : content,
+        category : category,
+    }
+      axios.post("/post/create",body)
+          .then( (res) => {
+              if (res.data.success){
+                  alert("게시글이 생성되었습니다.");
+                  const url = "/post/"+res.data.postId;
+                  window.location = url;
+              } else{
+                  alert("다시 시도해주세요.");
+                  window.location = "/post/create";
+              }
+          }).catch( (err) => {
+              alert("다시 시도해주세요.");
+              window.location = "/post/create";
+          })
     };
 
     const checkPostCancel = (e) => {
@@ -105,16 +81,17 @@ export default function PostComponent(props) {
                 <FormControl sx={{ ml:2 , minWidth: 220 }} size="small">
                     <InputLabel id="demo-simple-select-label">카테고리를 선택해주세요.</InputLabel>
                     <Select
+                      required
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      value={age}
-                      label="Age"
+                      value={category}
+                      label="category"
                       onChange={handleChange}
                     >
-                      <MenuItem value={10}>반려동물 친구 만들기</MenuItem>
-                      <MenuItem value={20}>내 자식 자랑하기</MenuItem>
-                      <MenuItem value={30}>묻고 답하기</MenuItem>
-                      <MenuItem value={30}>꿀팁 전수</MenuItem>
+                      <MenuItem value={'friend-make'}>반려동물 친구 만들기</MenuItem>
+                      <MenuItem value={'show-off'}>내 자식 자랑하기</MenuItem>
+                      <MenuItem value={'qna'}>묻고 답하기</MenuItem>
+                      <MenuItem value={'tips'}>꿀팁 전수</MenuItem>
                     </Select>
                   </FormControl>
               </Grid>
@@ -128,7 +105,7 @@ export default function PostComponent(props) {
                         size="small"
                         required 
                         multiline
-                        // onChange ={onAddressHandler}
+                        onChange ={onTitleHandler}
                         autoComplete='off'
                         sx={{width:"auto",ml:2,mt:0}}
                       />
@@ -142,7 +119,7 @@ export default function PostComponent(props) {
                 <Typography  variant="h6"  >
                   <TextField
                         margin="normal"
-                        // onChange = {onProfileContentHandler}
+                        onChange = {onContentHandler}
                         placeholder='내용을 입력해주세요.'
                         autoComplete='off'
                         fullWidth

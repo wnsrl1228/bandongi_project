@@ -9,11 +9,6 @@ const { isLoggedIn } = require('./middlewares');
     성고시 리턴값, 실패시 리턴값 지정 --> 추후 변경
 */
 
-// 게시글 생성 페이지 불러오기  get /post/create
-router.get('/create', isLoggedIn, (req, res, next) => {
-    res.sendFile(path.resolve('views/testCreatePost.html')); // 추후 변경
-})
-
 // 게시글 생성하기  post /post/create
 // 이미지 삽입 --> 추후 구현
 router.post('/create', isLoggedIn, async (req,res,next) => {
@@ -21,11 +16,11 @@ router.post('/create', isLoggedIn, async (req,res,next) => {
     const userId = req.user.id;
     try {
         // 게시글 DB에 추가하기
-        await pool.execute(
+        const [ResultSetHeader] = await pool.execute(
             "INSERT INTO post(user_id, title, content, category) VALUES(?,?,?,?)",
             [userId, title, content, category]
         );
-        return res.redirect('/'); // 생성된 게시글페이지로 이동 --> 추후 변경
+        return res.status(200).json({"success":"성공","postId" : ResultSetHeader.insertId});
     } catch (error) {
         console.log(error);
         return next(error);
