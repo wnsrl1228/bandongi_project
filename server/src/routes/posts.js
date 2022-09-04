@@ -162,7 +162,7 @@ router.get('/:id', isLoggedIn, async (req, res, next) => {
 })
 
 // 세부 게시글 수정 페이지 불러오기  get /post/:id/edit
-router.get('/:id/edit', isLoggedIn, async (req, res, next) => {
+router.get('/edit/:id', isLoggedIn, async (req, res, next) => {
     const postId = req.params.id;
     const userId = req.user.id;
     try {
@@ -173,30 +173,27 @@ router.get('/:id/edit', isLoggedIn, async (req, res, next) => {
         );
         // post_id가 잘못된 값인 경우
         if (Array.isArray(dbPostUser) && dbPostUser.length == 0) {
-            console.log('잘못된 post_id 값');
-            return res.redirect('/');
+            return next(error);
         }
         // post를 쓴 userId 와 세션 유저 id가 다른 경우
         if (dbPostUser[0].user_id !== userId){
-            console.log('접근 오류')
-            return res.redirect('/');
+            return next(error);
         }
         // DB에서 수정할 게시글 가져오기
         const [dbPost] = await pool.execute(
-            `SELECT u.nickname, u.profile_img, p.title, p.content, p.category 
-            FROM post p LEFT JOIN user u ON p.user_id=u.id
-            where p.id=?;`,
+            `SELECT title, content, category
+            FROM post where id=?;`,
             [postId]
         );
-        return res.status(201).json(dbPost); // 추후 변경
+        return res.status(201).json(dbPost[0]); // 추후 변경
     } catch (error) {
         console.log(error);
         return next(error);
     }
 })
 
-// 세부 게시글 수정하기 patch /post/:id
-router.patch('/:id', isLoggedIn, async (req,res,next) => {
+// 세부 게시글 수정하기 patch /post/edit/:id
+router.patch('/edit/:id', isLoggedIn, async (req,res,next) => {
     const postId = req.params.id;
     const userId = req.user.id;
     const {title, content, category} = req.body;
@@ -209,19 +206,19 @@ router.patch('/:id', isLoggedIn, async (req,res,next) => {
         // post_id가 잘못된 값인 경우
         if (Array.isArray(dbPostUser) && dbPostUser.length == 0) {
             console.log('잘못된 post_id 값');
-            return res.redirect('/');
+            return res.status(200).json({"success":"실패"});
         }
         // post를 쓴 userId 와 세션 유저 id가 다른 경우
         if (dbPostUser[0].user_id !== userId){
             console.log('접근 오류')
-            return res.redirect('/');
+            return res.status(200).json({"success":"실패"});
         }
-        // DB에 해당 id 게시글 수정하기
+        // DB에 게시글 수정하기
         await pool.execute(
-            "UPDATE post SET title=?, content=?, category=? where id=?",
+            `UPDATE post SET title=?, content=?, category=? where id=?`,
             [title, content, category, postId]
         );
-        return res.redirect('/'); // 수정된 게시글로 이동 --> 추후 변경
+        return res.status(200).json({"success":"성공"})// 수정된 프로필로 이동 --> 추후 변경
     } catch (error) {
         console.log(error);
         return next(error);

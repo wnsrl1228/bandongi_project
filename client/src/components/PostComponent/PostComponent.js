@@ -24,14 +24,12 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PetsIcon from '@mui/icons-material/Pets';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import { Link as RouterLink} from "react-router-dom";
 import axios from "axios";
-import { Link as RouterLink,useNavigate} from "react-router-dom";
 import { Box } from '@mui/system';
 import dog1 from '../MainComponent/sample/dog1.jpg';
 const hello=[dog1];
 export default function PostComponent(props) {
-
-    const navigate = useNavigate();
 
     const post_id = props.post_id;
     const [post, setPost] = useState([]);
@@ -53,8 +51,8 @@ export default function PostComponent(props) {
         setAnchorEl(null);
     };
     const handleModify = () => {
-        const url = "/post/edit" + post_id;
-        window.location.href = url;
+        const url = "/post/edit/" + post_id;
+        window.location.assign(url);
     }
     const handleDelete = () => {
         var result = window.confirm("정말로 삭제하시겠습니까?");
@@ -64,7 +62,7 @@ export default function PostComponent(props) {
             .then((res) => {
                 if (res.data.success == '성공'){
                     alert("게시글이 삭제되었습니다.");
-                    window.location.href ="/";
+                    window.location.replace("/");
                 } else {
                     alert("다시 시도해주세요.");
                 }

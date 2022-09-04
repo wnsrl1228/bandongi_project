@@ -5,6 +5,7 @@ import Post from './pages/post/Post';
 import Profile from './pages/profile/Profile';
 import ProfileUpdate from './pages/profileUpdate/ProfileUpdate'
 import PostCreate from './pages/postCreate/PostCreate'
+import PostUpdate from './pages/postUpdate/PostUpdate'
 import PublicRoute from "./utils/PublicRoute"; 
 import PrivateRoute from "./utils/PrivateRoute";
 
@@ -31,6 +32,9 @@ function App() {
 
           <Route exact path="/post/create" element={ <PrivateRoute restricted={true}/>}>
             <Route exact path="/post/create" element={<PostCreate/>} />
+          </Route>
+          <Route exact path="/post/edit/:id" element={ <PrivateRoute restricted={true}/>}>
+            <Route exact path="/post/edit/:id" element={<PostUpdate/>} />
           </Route>
           <Route exact path="/post/:id" element={ <PrivateRoute restricted={true}/>}>
             <Route exact path="/post/:id" element={<Post/>} />
