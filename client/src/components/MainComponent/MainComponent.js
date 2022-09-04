@@ -15,7 +15,6 @@ import {
     Button,
     CardActionArea,
 } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PetsIcon from '@mui/icons-material/Pets';
 import axios from "axios";
 import { Link as RouterLink} from "react-router-dom";
@@ -68,11 +67,6 @@ export default function MainComponent() {
                             
                                     </Link>
                                     
-                                }
-                                action={
-                                    <IconButton aria-label="settings">
-                                        <MoreVertIcon />
-                                    </IconButton>
                                 }
                                 sx={{p:1,pl:2,pr:2}}
                                 title={

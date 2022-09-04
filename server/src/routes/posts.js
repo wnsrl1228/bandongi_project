@@ -239,20 +239,18 @@ router.delete('/:id', isLoggedIn, async (req,res,next) => {
         );
         // post_id가 잘못된 값인 경우
         if (Array.isArray(dbPostUser) && dbPostUser.length == 0) {
-            console.log('잘못된 post_id 값');
-            return res.redirect('/');
+            return res.status(200).json({"success":"실패"});
         }
         // post를 쓴 userId 와 세션 유저 id가 다른 경우
         if (dbPostUser[0].user_id !== userId){
-            console.log('접근 오류')
-            return res.redirect('/');
+            return res.status(200).json({"success":"실패"});
         }
         // DB에 해당 id 게시글 삭제
         await pool.execute(
             "DELETE FROM post WHERE id=?;",
             [postId]
         );
-        return res.redirect('/'); // 게시글 목록 페이지로 이동 --> 추후 변경
+        return res.status(200).json({"success":"성공"});
     } catch (error) {
         console.log(error);
         return next(error);

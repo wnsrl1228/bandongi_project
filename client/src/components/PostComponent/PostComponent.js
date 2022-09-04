@@ -16,11 +16,14 @@ import {
     TextField,
     Button,
     InputAdornment,
-    Paper
+    Paper,
+    Menu,
+    MenuItem
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import DeleteIcon from '@mui/icons-material/Delete';
 import PetsIcon from '@mui/icons-material/Pets';
-import AccountCircle from '@mui/icons-material/AccountCircle';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import axios from "axios";
 import { Link as RouterLink,useNavigate} from "react-router-dom";
 import { Box } from '@mui/system';
@@ -35,13 +38,47 @@ export default function PostComponent(props) {
     const [comments, setComments] = useState([]);
     const [likeValid, setLikeValid] = useState(''); // 댓글 추천수 유효성 체크
 
+    const [userId, setUserId] = useState(''); 
+
     //댓글 관련 변수
     const [commentContent, setCommentContent] = useState('');
 
+    // 수정 삭제 관련
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+    const handleModify = () => {
+        const url = "/post/edit" + post_id;
+        window.location.href = url;
+    }
+    const handleDelete = () => {
+        var result = window.confirm("정말로 삭제하시겠습니까?");
+        if(result){
+            const url = "/post/" + post_id;
+            axios.delete(url)
+            .then((res) => {
+                if (res.data.success == '성공'){
+                    alert("게시글이 삭제되었습니다.");
+                    window.location.href ="/";
+                } else {
+                    alert("다시 시도해주세요.");
+                }
+            })
+            .catch((err) => {
+                alert("다시 시도해주세요.");
+            })
+        }
+        return false;
+    }
     
     useEffect(() => {
         const fecthPost = async () => {
-
+            setUserId(sessionStorage.getItem('token'));
             // post페이지의 데이터 불러오기
             try{
                 const url = "/post/" + post_id;
@@ -123,7 +160,6 @@ export default function PostComponent(props) {
 
     }
 
-
     return (
         <Container  maxWidth="md" sx={{mt: 20,mb:100}}>
             <Card sx={{}}>
@@ -134,9 +170,40 @@ export default function PostComponent(props) {
                         </Link>
                     }
                     action={
-                        <IconButton aria-label="settings">
-                            <MoreVertIcon />
-                        </IconButton>
+                        userId == post.userId
+                        ? 
+                        <div>
+                            <IconButton aria-label="settings"
+                                id="basic-button"
+                                aria-controls={open ? 'basic-menu' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? 'true' : undefined}
+                                onClick={handleClick}
+                                >
+                                <MoreVertIcon />
+                            </IconButton>
+
+                            <Menu
+                                id="basic-menu"
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                                MenuListProps={{
+                                'aria-labelledby': 'basic-button',
+                                }}
+                                
+                                >
+                                <MenuItem onClick={handleModify} sx={{p:0,px:3}}>
+                                    <DriveFileRenameOutlineIcon style={{paddingBottom:"6px",paddingRight:'5px'}}/>
+                                    수정
+                                </MenuItem>
+                                <MenuItem onClick={handleDelete} sx={{p:0, px:3}}>
+                                    <DeleteIcon style={{paddingBottom:"6px",paddingRight:'5px'}}/>
+                                    삭제
+                                </MenuItem>
+                            </Menu>
+                        </div>
+                        : <span></span>
                     }
                     sx={{p:1,pl:2,pr:2}}
                     title={
