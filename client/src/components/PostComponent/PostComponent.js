@@ -159,7 +159,7 @@ export default function PostComponent(props) {
     }
 
     return (
-        <Container  maxWidth="md" sx={{mt: 20,mb:100}}>
+        <Container  maxWidth="sm" sx={{mt: 20,mb:100}}>
             <Card sx={{}}>
                 <CardHeader
                     avatar={
@@ -217,17 +217,21 @@ export default function PostComponent(props) {
                             {post.title}
                         </Typography>
                     </CardContent>
-                    <CardMedia
-                        component="img"
-                        sx={{
-                            height:"194",
-                        // 16:9
-                        // pt: '56.25%',
-                        }}
-                        image={hello[0]}
-                        
-                        alt="random"
-                    />
+                    {post.post_img === '' 
+                    ? <span></span>
+                    :                    
+                        <CardMedia
+                            component="img"
+                            sx={{
+                                height:"194",
+                            // 16:9
+                            // pt: '56.25%',
+                            }}
+                            image={post.post_img}
+                            
+                            alt="random"/>
+                    }
+
                 
                     <CardContent>
                         <Typography variant="body2" gutterBottom>

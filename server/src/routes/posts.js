@@ -2,7 +2,42 @@ const router = require('express').Router();
 const pool = require('../config/db');
 const path = require('path'); //추후 삭제가능성 있음
 const { isLoggedIn } = require('./middlewares');
+const fs = require('fs');
+const multer = require('multer');
+const db = require('../config/db');
 
+
+// 파일 업로드
+
+try {
+    fs.readdirSync('uploads');
+} catch (error) {
+    console.error('uploads 폴더가 없어 uploads 폴더를 생성합니다.');
+    fs.mkdirSync('uploads');
+}
+
+const upload = multer({
+    storage: multer.diskStorage({
+        destination(req, file, cb) {
+            cb(null, 'uploads/');
+        },
+        filename(req, file, cb) {
+            file.originalname = Buffer.from(file.originalname, 'latin1').toString('utf8') // 파일 글 깨짐 방지
+            const ext = path.extname(file.originalname);
+            cb(null, path.basename(file.originalname, ext) + Date.now() +ext);
+        },
+    }),
+    limits: {fileSize: 5 * 1024 * 1024},
+});
+router.post('/img', isLoggedIn, upload.single('img'), async (req,res,next) => {
+    if (req.file === undefined){
+        return res.status(200).json({path: ''});
+    }
+    return res.status(200).json({path: `/img/${req.file.filename}`});
+    
+
+    
+});
 /*
     router끼리의 순서 중요
     로그인 여부 체크 -->추후 변경
@@ -10,15 +45,15 @@ const { isLoggedIn } = require('./middlewares');
 */
 
 // 게시글 생성하기  post /post/create
-// 이미지 삽입 --> 추후 구현
-router.post('/create', isLoggedIn, async (req,res,next) => {
-    const {title, content, category } = req.body;
+const upload2 = multer()
+router.post('/create', upload2.none(), isLoggedIn, async (req,res,next) => {
+    const {title, content, category, postImg } = req.body;
     const userId = req.user.id;
     try {
         // 게시글 DB에 추가하기
         const [ResultSetHeader] = await pool.execute(
-            "INSERT INTO post(user_id, title, content, category) VALUES(?,?,?,?)",
-            [userId, title, content, category]
+            "INSERT INTO post(user_id, title, content, category, post_img) VALUES(?,?,?,?,?)",
+            [userId, title, content, category, postImg]
         );
         return res.status(200).json({"success":"성공","postId" : ResultSetHeader.insertId});
     } catch (error) {
@@ -139,7 +174,7 @@ router.get('/:id', isLoggedIn, async (req, res, next) => {
     try {
         // DB에서 해당 id의 게시글과 댓글 목록 가져오기
         const [dbPostAndComments] = await pool.execute(
-            `SELECT u.nickname userNickname, u.profile_img,u.id userId, p.id, p.title, p.content,p.comment_count, DATE_FORMAT(p.created_date,'%Y-%m-%d %h:%m:%s') created_date,
+            `SELECT u.nickname userNickname, u.profile_img,u.id userId, p.id, p.title, p.content,p.comment_count,p.post_img, DATE_FORMAT(p.created_date,'%Y-%m-%d %h:%m:%s') created_date,
 			IFNULL(p_l.p_like_count,0) p_like_count,IFNULL(c_l.c_like_count,0) c_like_count,
 			c.id c_id, c.content c_content, c.parent_group, c.child_group_order, DATE_FORMAT(c.created_date,'%Y-%m-%d %h:%m:%s') c_created_date, c.updated_date c_updated_date, cu.nickname commentNickname, cu.id commentUserID
             FROM post p LEFT JOIN user u ON p.user_id=u.id
@@ -181,7 +216,7 @@ router.get('/edit/:id', isLoggedIn, async (req, res, next) => {
         }
         // DB에서 수정할 게시글 가져오기
         const [dbPost] = await pool.execute(
-            `SELECT title, content, category
+            `SELECT title, content, category, post_img
             FROM post where id=?;`,
             [postId]
         );
@@ -196,7 +231,7 @@ router.get('/edit/:id', isLoggedIn, async (req, res, next) => {
 router.patch('/edit/:id', isLoggedIn, async (req,res,next) => {
     const postId = req.params.id;
     const userId = req.user.id;
-    const {title, content, category} = req.body;
+    const {title, content, category, post_img} = req.body;
     try {
         // DB에서 post를 쓴 유저 id값 불러오기
         const [dbPostUser] = await pool.execute(
@@ -215,8 +250,8 @@ router.patch('/edit/:id', isLoggedIn, async (req,res,next) => {
         }
         // DB에 게시글 수정하기
         await pool.execute(
-            `UPDATE post SET title=?, content=?, category=? where id=?`,
-            [title, content, category, postId]
+            `UPDATE post SET title=?, content=?, category=?, post_img=? where id=?`,
+            [title, content, category, post_img, postId]
         );
         return res.status(200).json({"success":"성공"})// 수정된 프로필로 이동 --> 추후 변경
     } catch (error) {

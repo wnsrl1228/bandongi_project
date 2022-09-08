@@ -22,10 +22,12 @@ export default function PostUpdateComponent(props) {
     const [category, setCategory] = useState('');
     const [title, setTitle] = useState(''); 
     const [content, setContent] = useState(''); 
+    const [postImg, setPostImg] = useState(''); 
 
     const [initTitle, setInitTitle] = useState('');
     const [initContent, setInitContent] =useState('');
     const [initCategory, setInitCategory] = useState('');
+    const [initPostImg, setInitPostImg] = useState('');
 
     useEffect(() => {
       const fecthPost = async () => {
@@ -35,9 +37,11 @@ export default function PostUpdateComponent(props) {
               setCategory(res.data.category);
               setTitle(res.data.title);
               setContent(res.data.content);
+              setPostImg(res.data.post_img);
               setInitTitle(res.data.title);
               setInitContent(res.data.content);
               setInitCategory(res.data.category);
+              setInitPostImg(res.data.post_img)
           } catch (err){
               alert(err);
           }
@@ -56,7 +60,7 @@ export default function PostUpdateComponent(props) {
     } 
 
     const handleSubmit = (e) => {
-      if (initTitle === title && initContent === content && initCategory === category ) {
+      if (initTitle === title && initContent === content && initCategory === category && initPostImg === postImg ) {
         alert("변경사항이 없습니다.");
         return false;
       }
@@ -64,6 +68,7 @@ export default function PostUpdateComponent(props) {
         title: title,
         content : content,
         category : category,
+        post_img : postImg
       }
       const url = "/post/edit/" + post_id;
       axios.patch(url,body)
@@ -91,6 +96,36 @@ export default function PostUpdateComponent(props) {
           return false;
       }
     }
+
+
+    const handleChangeImage = (e) => {
+      const fileList = e.target.files;
+      const formData = new FormData();
+      formData.append("img", fileList[0])
+      axios.post('/post/img', formData,{
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+        .then((res) => {
+          if (res.status == 200) {
+            document.getElementById('img-url').value = res.data.path;
+            document.getElementById('img-preview').src = res.data.path;
+            document.getElementById('img-preview').style.display = 'inline';
+            setPostImg(res.data.path);
+          } else if (res.status == 201) {
+            document.getElementById('img-url').value = ''
+            document.getElementById('img-preview').src = ''
+            document.getElementById('img-preview').style.display = 'none';
+            setPostImg('');
+          }
+          
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+
     return (
       <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:100}} >
       <Container fixed style={{border: '1px solid #d2d2d2',borderRadius:"10px",backgroundColor:"#FFFFFF"}} sx={{p:5,boxShadow:4}}>
@@ -134,7 +169,32 @@ export default function PostUpdateComponent(props) {
                       />
                 </Typography>
               </Grid>
-              
+              <Grid item  sx={{ml:3,mt:4}} xs={12}>
+                <Typography  fontWeight="Bold" >
+                  <div className="img-preview">
+                    <Box
+                        id="img-preview"
+                        component="img"
+                        value={postImg || ''}
+                        sx={{
+                          height: 233,
+                          width: 350,
+                          maxHeight: { xs: 233, md: 167 },
+                          maxWidth: { xs: 350, md: 250 },
+                        }}
+                        src={postImg || ''}
+                        alt="미리보기"
+                        
+                      />
+                    <input id="img-url" type="hidden" name="url" value={postImg || ''}/>
+                  </div>
+                  <div>
+                    사진 업로드
+                    <input id="img" type="file" accept={postImg || "image/*"} onChange={handleChangeImage} style={{marginLeft:"10px"}} />
+                  </div>
+                </Typography>
+
+              </Grid>
               <Grid item  sx={{ml:3,mt:4,mb:-3}} xs={12}>
                 <Typography  variant="h5" fontWeight="Bold" style={{display:"inline-block", margin:"5px"}}>
                   내용

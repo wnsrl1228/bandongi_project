@@ -22,6 +22,7 @@ export default function PostComponent() {
     const [category, setCategory] = useState('');
     const [title, setTitle] = useState(''); 
     const [content, setContent] = useState(''); 
+    const [postImg, setPostImg] = useState(''); 
 
     const handleChange = (event) => {
       setCategory(event.target.value);
@@ -44,7 +45,9 @@ export default function PostComponent() {
         title: title,
         content : content,
         category : category,
-    }
+        postImg : postImg
+      }
+     
       axios.post("/post/create",body)
           .then( (res) => {
               if (res.data.success){
@@ -60,6 +63,35 @@ export default function PostComponent() {
               window.location = "/post/create";
           })
     };
+
+    // 파일 업로드
+    const handleChangeImage = (e) => {
+      const fileList = e.target.files;
+      const formData = new FormData();
+      formData.append("img", fileList[0])
+      axios.post('/post/img', formData,{
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+        .then((res) => {
+          if (res.status == 200) {
+            document.getElementById('img-url').value = res.data.path;
+            document.getElementById('img-preview').src = res.data.path;
+            document.getElementById('img-preview').style.display = 'inline';
+            setPostImg(res.data.path);
+          } else if (res.status == 201) {
+            document.getElementById('img-url').value = ''
+            document.getElementById('img-preview').src = ''
+            document.getElementById('img-preview').style.display = 'none';
+            setPostImg('');
+          }
+          
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
 
     const checkPostCancel = (e) => {
       var result = window.confirm("정말로 취소하시겠습니까?");
@@ -111,7 +143,29 @@ export default function PostComponent() {
                       />
                 </Typography>
               </Grid>
-              
+              <Grid item  sx={{ml:3,mt:4}} xs={12}>
+                <Typography   fontWeight="Bold" >
+                  <div className="img-preview">
+                    <Box
+                        id="img-preview"
+                        component="img"
+                        sx={{
+                          height: 233,
+                          width: 350,
+                          maxHeight: { xs: 233, md: 167 },
+                          maxWidth: { xs: 350, md: 250 },
+                        }}
+                        alt="미리보기"
+                        src=""
+                      />
+                    <input id="img-url" type="hidden" name="url"/>
+                  </div>
+                  <div>
+                    사진 업로드
+                    <input id="img" type="file" accept="image/*" onChange={handleChangeImage} style={{marginLeft:"10px"}}/>
+                  </div>
+                </Typography>
+              </Grid>
               <Grid item  sx={{ml:3,mt:4,mb:-3}} xs={12}>
                 <Typography  variant="h5" fontWeight="Bold" style={{display:"inline-block", margin:"5px"}}>
                   내용

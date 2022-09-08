@@ -18,18 +18,8 @@ import {
 import PetsIcon from '@mui/icons-material/Pets';
 import axios from "axios";
 import { Link as RouterLink} from "react-router-dom";
-import cat1 from "./sample/cat1.jpg"
-import dog1 from "./sample/dog1.jpg"
-import dog2 from "./sample/dog2.jpg"
-import dog3 from "./sample/dog3.jpg"
-import dog4 from "./sample/dog4.jpg"
-import dog5 from "./sample/dog5.jpg"
-import dog6 from "./sample/dog6.jpg"
-import dog7 from "./sample/dog7.jpg"
-import dog8 from "./sample/dog8.jpg"
 
 
-const hello=[dog1,dog6,dog3,dog4,dog5,cat1,dog2,dog7,dog8]
 export default function MainComponent() {
     const [posts, setPosts] = useState([])
     useEffect(() => {
@@ -85,32 +75,52 @@ export default function MainComponent() {
                                             display: "-webkit-box",
                                             WebkitLineClamp: "1",
                                             WebkitBoxOrient: "vertical",
+                                            fontSize:"20px",
+                                            mt:1
                                         }}>
                                         {post.title}
                                     </Typography>
                                 </CardContent>
-                                <CardMedia
-                                    component="img"
-                                    sx={{
-                                        height:"190px",
-                                    // 16:9
-                                    // pt: '60.25%',
-                                    }}
-                                    image={hello[index]}
-                                    alt="random"
-                                />
+                                {post.post_img === '' 
+                                    ? <span></span>
+                                    :                    
+                                        <CardMedia
+                                            component="img"
+                                            sx={{
+                                                height:"190px",
+                                            }}
+                                            image={post.post_img}
+                                            
+                                            alt=""/>
+                                }
                             
                                 <CardContent>
-                                    <Typography variant="body2" gutterBottom 
-                                        sx={{
-                                            overflow: "hidden",
-                                            textOverflow: "ellipsis",
-                                            display: "-webkit-box",
-                                            WebkitLineClamp: "2",
-                                            WebkitBoxOrient: "vertical",
-                                        }}>
-                                        {post.content}
-                                    </Typography>
+                                {post.post_img === '' 
+                                ? <Typography variant="body2" gutterBottom 
+                                    sx={{
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        display: "-webkit-box",
+                                        WebkitLineClamp: "7",
+                                        WebkitBoxOrient: "vertical",
+                                        fontSize:"18px",
+                                        height:"180px"
+                                    }}>
+                                    {post.content}
+                                </Typography>
+                                : <Typography variant="body2" gutterBottom 
+                                    sx={{
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        display: "-webkit-box",
+                                        WebkitLineClamp: "2",
+                                        WebkitBoxOrient: "vertical",
+                                        fontSize:"18px",
+                                    }}>
+                                    {post.content}
+                                </Typography>
+                                }
+                                    
                                 </CardContent>
                                 <Divider light />
 

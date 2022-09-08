@@ -134,11 +134,6 @@ export default function ProfileComponent(props) {
                                     </Link>
                                     
                                 }
-                                action={
-                                    <IconButton aria-label="settings">
-                                        <MoreVertIcon />
-                                    </IconButton>
-                                }
                                 sx={{p:1,pl:2,pr:2}}
                                 title={
                                     <Link component={RouterLink} to={{pathname:`/profile/${post.userId}`}} underline="none" style={{color:"black"}}>
@@ -149,24 +144,59 @@ export default function ProfileComponent(props) {
                             /><Divider light />
                             <CardActionArea component={RouterLink} to={{pathname:`/post/${post.id}`}}>
                                 <CardContent sx={{p:1,pl:2,pr:1}}>
-                                    <Typography gutterBottom variant="body1" component="div" fontWeight="bold">
+                                    <Typography gutterBottom variant="body1" component="div" fontWeight="bold"
+                                        sx={{
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                            display: "-webkit-box",
+                                            WebkitLineClamp: "1",
+                                            WebkitBoxOrient: "vertical",
+                                            fontSize:"20px",
+                                            mt:1
+                                        }}>
                                         {post.title}
                                     </Typography>
                                 </CardContent>
-                                <CardMedia
-                                    component="img"
-                                    sx={{
-                                        height:"194",
-                                    // 16:9
-                                    // pt: '56.25%',
-                                    }}
-                                    alt="random"
-                                />
+                                {post.post_img === '' 
+                                    ? <span></span>
+                                    :                    
+                                        <CardMedia
+                                            component="img"
+                                            sx={{
+                                                height:"190px",
+                                            }}
+                                            image={post.post_img}
+                                            
+                                            alt=""/>
+                                }
                             
                                 <CardContent>
-                                    <Typography variant="body2" gutterBottom>
-                                        {post.content}
-                                    </Typography>
+                                {post.post_img === '' 
+                                ? <Typography variant="body2" gutterBottom 
+                                    sx={{
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        display: "-webkit-box",
+                                        WebkitLineClamp: "7",
+                                        WebkitBoxOrient: "vertical",
+                                        fontSize:"18px",
+                                        height:"180px"
+                                    }}>
+                                    {post.content}
+                                </Typography>
+                                : <Typography variant="body2" gutterBottom 
+                                    sx={{
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        display: "-webkit-box",
+                                        WebkitLineClamp: "2",
+                                        WebkitBoxOrient: "vertical",
+                                        fontSize:"18px",
+                                    }}>
+                                    {post.content}
+                                </Typography>
+                                }
+                                    
                                 </CardContent>
                                 <Divider light />
 

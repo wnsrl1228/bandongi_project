@@ -8,7 +8,7 @@ router.get('/main', async (req, res, next) => {
     try {
         // DB에서 해당 카테고리 게시글 목록 불러오기
         const [dbPosts] = await pool.execute(
-            `SELECT p.id, u.profile_img, u.nickname,u.id userId , p.title, p.content,p.comment_count,
+            `SELECT p.id, u.profile_img, u.nickname,u.id userId , p.title, p.content,p.comment_count, p.post_img,
             IFNULL(c.like_co,0) like_count, DATE_FORMAT(p.created_date,'%Y-%m-%d %h:%m:%s') created_date
             FROM post p LEFT JOIN user u ON p.user_id = u.id
             LEFT JOIN (SELECT count(post_id) as like_co ,post_id FROM post_like
