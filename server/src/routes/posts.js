@@ -29,14 +29,12 @@ const upload = multer({
     }),
     limits: {fileSize: 5 * 1024 * 1024},
 });
+
 router.post('/img', isLoggedIn, upload.single('img'), async (req,res,next) => {
     if (req.file === undefined){
         return res.status(200).json({path: ''});
     }
     return res.status(200).json({path: `/img/${req.file.filename}`});
-    
-
-    
 });
 /*
     router끼리의 순서 중요
@@ -174,7 +172,7 @@ router.get('/:id', isLoggedIn, async (req, res, next) => {
     try {
         // DB에서 해당 id의 게시글과 댓글 목록 가져오기
         const [dbPostAndComments] = await pool.execute(
-            `SELECT u.nickname userNickname, u.profile_img,u.id userId, p.id, p.title, p.content,p.comment_count,p.post_img, DATE_FORMAT(p.created_date,'%Y-%m-%d %h:%m:%s') created_date,
+            `SELECT u.nickname userNickname, u.profile_img,u.id userId,u.profile_img, p.id, p.title, p.content,p.comment_count,p.post_img, DATE_FORMAT(p.created_date,'%Y-%m-%d %h:%m:%s') created_date,
 			IFNULL(p_l.p_like_count,0) p_like_count,IFNULL(c_l.c_like_count,0) c_like_count,
 			c.id c_id, c.content c_content, c.parent_group, c.child_group_order, DATE_FORMAT(c.created_date,'%Y-%m-%d %h:%m:%s') c_created_date, c.updated_date c_updated_date, cu.nickname commentNickname, cu.id commentUserID
             FROM post p LEFT JOIN user u ON p.user_id=u.id

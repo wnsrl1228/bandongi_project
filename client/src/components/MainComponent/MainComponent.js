@@ -53,7 +53,7 @@ export default function MainComponent() {
                             <CardHeader
                                 avatar={
                                     <Link component={RouterLink} to={{pathname:`/profile/${post.userId}`}}>
-                                        <Avatar src={post.profile_img}></Avatar>
+                                        <Avatar src={post.profile_img || ''}></Avatar>
                             
                                     </Link>
                                     

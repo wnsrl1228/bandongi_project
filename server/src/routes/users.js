@@ -2,9 +2,36 @@ const router = require('express').Router();
 const pool = require('../config/db');
 const path = require('path'); //추후 삭제가능성 있음
 const { isLoggedIn, isNotLoggedIn} = require('./middlewares');
+const fs = require('fs');
+const multer = require('multer');
 
+try {
+    fs.readdirSync('uploads/profile');
+} catch (error) {
+    console.error('uploads/profile 폴더가 없어 uploads 폴더를 생성합니다.');
+    fs.mkdirSync('uploads/profile');
+}
 
+const upload = multer({
+    storage: multer.diskStorage({
+        destination(req, file, cb) {
+            cb(null, 'uploads/profile');
+        },
+        filename(req, file, cb) {
+            file.originalname = Buffer.from(file.originalname, 'latin1').toString('utf8') // 파일 글 깨짐 방지
+            const ext = path.extname(file.originalname);
+            cb(null, path.basename(file.originalname, ext) + Date.now() +ext);
+        },
+    }),
+    limits: {fileSize: 5 * 1024 * 1024},
+});
 
+router.post('/img', isLoggedIn, upload.single('img'), async (req,res,next) => {
+    if (req.file === undefined){
+        return res.status(200).json({path: ''});
+    }
+    return res.status(200).json({path: `/img/profile/${req.file.filename}`});
+});
 
 // 해당 id의 user 프로필 페이지 불러오기
 router.get('/information', isLoggedIn, async (req, res, next) => {
@@ -13,7 +40,7 @@ router.get('/information', isLoggedIn, async (req, res, next) => {
     try {
         // DB에 해당 id 유저의 정보랑 게시글 불러오기
         const [dbInformation] = await pool.execute(
-            `SELECT id, nickname FROM user WHERE id = ?;`,
+            `SELECT id, nickname, profile_img FROM user WHERE id = ?;`,
             [userId]
         );
         if (Array.isArray(dbInformation) && dbInformation.length == 0) {
@@ -72,8 +99,9 @@ router.get('/edit', isLoggedIn, async (req, res, next) => {
     }
 });
 
+const upload2 = multer()
 // 유저 프로필 변경하기 patch +
-router.patch('/edit', isLoggedIn, async (req, res, next) => {
+router.patch('/edit', isLoggedIn,upload2.none(), async (req, res, next) => {
     const {nickname, profile_content, profile_img, address} = req.body
     const userId = req.user.id
     try {
@@ -88,6 +116,8 @@ router.patch('/edit', isLoggedIn, async (req, res, next) => {
         return next(error);
     }
 });
+
+
 // 유저 친구목록 페이지 불러오기 get
 router.get('/friend', isLoggedIn, async (req, res, next) => {
 

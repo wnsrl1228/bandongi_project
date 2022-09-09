@@ -1,4 +1,4 @@
-import React, { useState,useEffect} from 'react';
+import React, { useState,useEffect,useRef } from 'react';
 import { 
     Grid,
     Container,
@@ -12,7 +12,7 @@ import {
 
 import axios from "axios";
 import { Link as RouterLink} from "react-router-dom";
-
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
 export default function ProfileUpdateComponent() {
 
     const [userId, setUserId] = useState("");
@@ -31,8 +31,6 @@ export default function ProfileUpdateComponent() {
               setProfileImg(res.data.profile_img);
               setProfileContent(res.data.profile_content);
               setAddress(res.data.address);
-
-
           } catch (err){
               alert(err);
           }
@@ -76,7 +74,32 @@ export default function ProfileUpdateComponent() {
               window.location = '/profile/edit';
           })
     };
-
+    const profileRef = useRef(null);
+    // 프로필 파일 업로드
+    const handleChangeProfileImage = (e) => {
+      const fileList = e.target.files;
+      const formData = new FormData();
+      formData.append("img", fileList[0])
+      axios.post('/user/img', formData,{
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+        .then((res) => {
+          if (res.status == 200) {
+            document.getElementById('img-url').value = res.data.path;
+            profileRef.current.src = res.data.path;
+            setProfileImg(res.data.path);
+          } else if (res.status == 201) {
+            document.getElementById('img-url').value = ''
+            profileRef.current.src = '';
+            setProfileImg('');
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
     return (
         <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:100}} >
             <Container fixed>
@@ -87,11 +110,25 @@ export default function ProfileUpdateComponent() {
                         <img></img>
                     </Grid>
 
+                  {/* 프로필 이미지 변경  */}
                     <Grid item sx={{ml:4,mt:-5}} >
-                        <Link component={RouterLink} to={{pathname:`/profile/${userId}`}}>
-                            <Avatar src={profileImg} sx={{boxShadow:3}}style={{width:"100px",height:"100px",border: '5px solid white'}}></Avatar>
-                        </Link>
+                        <div className="img-preview">
+                        <Avatar  ref={profileRef}  src={profileImg|| ''} sx={{boxShadow:3,height: '100px', width: '100px'}}style={{border: '5px solid white'}}></Avatar>
+                          <input id="img-url" type="hidden" name="url" value={profileImg || ''}/>
+                        </div>
+                        <div>
+                          <label htmlFor="upload-photo">
+                            <input
+                              style={{ display: 'none' }}
+                              id="upload-photo" type="file" accept={profileImg || "image/*"} onChange={handleChangeProfileImage}
+                            />
+                            <Button color="primary" variant="contained" component="span" sx={{px:1,ml:3,mt:1}} >
+                            <CameraAltIcon/>
+                            </Button>
+                          </label>
+                        </div>
                     </Grid>
+                    
 
                     <Grid item  sx={{ml:2,mt: {xs:2}}} xs={10}  sm={7} md={8} lg={9}>
                         <Grid container justifyContent="space-between">

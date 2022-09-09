@@ -60,6 +60,7 @@ export default function LoggedInNavbarComponent() {
                 const res = await axios.get("/user/information");
                 setUser(res.data[0].nickname);
                 setUserId(res.data[0].id);
+                setProfileImage(res.data[0].profile_img);
             } catch (err){
                 alert(err);
             }
@@ -172,7 +173,7 @@ export default function LoggedInNavbarComponent() {
                                 aria-haspopup="true"
                                 aria-expanded={open ? 'true' : undefined}
                             >   
-                                <Avatar sx={{ width: 32, height: 32 }}></Avatar>
+                                <Avatar sx={{ width: 32, height: 32 }} src={profileImage || ''}></Avatar>
                                 <Typography sx={{ ml: 1,whiteSpace : "nowrap",color:'white'}}>
                                     {user}
                                 </Typography>
