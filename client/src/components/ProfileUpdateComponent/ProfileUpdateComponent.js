@@ -20,6 +20,7 @@ export default function ProfileUpdateComponent() {
     const [profileImg, setProfileImg] = useState("");
     const [address , setAddress] = useState("");
     const [profileContent, setProfileContent] = useState("");
+    const [profileBackgroundImg, setProfileBackgroundImg] = useState("");
 
     useEffect(() => {
       const fecthPost = async () => {
@@ -31,6 +32,7 @@ export default function ProfileUpdateComponent() {
               setProfileImg(res.data.profile_img);
               setProfileContent(res.data.profile_content);
               setAddress(res.data.address);
+              setProfileBackgroundImg(res.data.profile_background_img)
           } catch (err){
               alert(err);
           }
@@ -59,7 +61,8 @@ export default function ProfileUpdateComponent() {
           nickname: nickname,
           address : address,
           profile_content : profileContent,
-          profile_img:profileImg
+          profile_img:profileImg,
+          profile_background_img : profileBackgroundImg
       }
       axios.patch("/user/edit",body)
           .then( (res) => {
@@ -75,6 +78,7 @@ export default function ProfileUpdateComponent() {
           })
     };
     const profileRef = useRef(null);
+    
     // 프로필 파일 업로드
     const handleChangeProfileImage = (e) => {
       const fileList = e.target.files;
@@ -100,6 +104,33 @@ export default function ProfileUpdateComponent() {
           console.error(err);
         });
     }
+    const profileBackgroundRef = useRef(null);
+    // 프로필 배경 파일 업로드
+    const handleChangeProfileBackgroundImage = (e) => {
+      const fileList = e.target.files;
+      const formData = new FormData();
+      formData.append("img", fileList[0])
+      axios.post('/user/img', formData,{
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+        .then((res) => {
+          if (res.status == 200) {
+            document.getElementById('img-url2').value = res.data.path;
+            profileBackgroundRef.current.src = res.data.path;
+            setProfileBackgroundImg(res.data.path);
+          } else if (res.status == 201) {
+            document.getElementById('img-url2').value = ''
+            profileBackgroundRef.current.src = '';
+            setProfileBackgroundImg('');
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+
     return (
         <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:100}} >
             <Container fixed>
@@ -107,7 +138,24 @@ export default function ProfileUpdateComponent() {
                 <Grid container sx={{mb:3,p:2,pt:5}} alignItems="center">
               
                     <Grid item style={{backgroundColor:"grey",borderRadius:"10px"}} xs={12} height="200px" sx={{boxShadow:4}}>
-                        <img></img>
+                        <div className="img-preview">
+                            <Avatar ref={profileBackgroundRef}  src={profileBackgroundImg|| ''} sx={{ bgcolor: "black",height:"200px", width:"100%",borderRadius:"10px"}}  variant="square"/>
+                            <input id="img-url2" type="hidden" name="url" value={profileBackgroundImg || ''}/>
+                        </div>
+                        <Grid container justifyContent="flex-end">
+                        <div>
+                            <label htmlFor="upload-photo2">
+                                <input
+                                  style={{ display: 'none' }}
+                                  id="upload-photo2" type="file" accept={profileBackgroundImg || "image/*"} onChange={handleChangeProfileBackgroundImage}
+                                />
+                                <Button color="primary" variant="contained" component="span" sx={{px:1,ml:3,mt:1}} >
+                                  배경 이미지 변경
+                                </Button>
+                            </label>
+                        </div>
+                        </Grid>
+
                     </Grid>
 
                   {/* 프로필 이미지 변경  */}

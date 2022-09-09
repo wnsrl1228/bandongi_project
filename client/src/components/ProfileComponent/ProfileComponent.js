@@ -36,6 +36,7 @@ export default function ProfileComponent(props) {
     const [nickname, setNickname] = useState("")
     const [userId, setUserId] = useState("")
     const [profileImg, setProfileImg] = useState("")
+    const [profileBackgroundImg, setProfileBackgroundImg] = useState("")
     const [title, setTitle] = useState("")
     const [profileContent, setProfileContent] = useState("")
     const [address, setAddress] = useState("")
@@ -52,6 +53,7 @@ export default function ProfileComponent(props) {
                 setTitle(res.data[0].title);
                 setProfileContent(res.data[0].profile_content);
                 setAddress(res.data[0].address);
+                setProfileBackgroundImg(res.data[0].profile_background_img);
                
             } catch (err){
                 alert(err);
@@ -80,7 +82,7 @@ export default function ProfileComponent(props) {
             <Container fixed>
             <Grid container sx={{mb:3,p:2,pt:5}} alignItems="center">
                 <Grid item style={{backgroundColor:"grey",borderRadius:"10px"}} xs={12} height="200px" sx={{boxShadow:4}}>
-                    <img></img>
+                    <Avatar   src={profileBackgroundImg|| ''} sx={{ bgcolor: "grey",height:"200px", width:"100%",borderRadius:"10px"}}  variant="square"/>
                 </Grid>
                 <Grid item sx={{ml:4,mt:-5}} >
                     <Link component={RouterLink} to={{pathname:`/profile/${userId}`}}>

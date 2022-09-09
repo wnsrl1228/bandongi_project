@@ -60,7 +60,7 @@ router.get('/profile/:id', isLoggedIn, async (req, res, next) => {
     try {
         // DB에 해당 id 유저의 정보랑 게시글 불러오기
         const [dbUserProfileAndPosts] = await pool.execute(
-            `SELECT u.id userId, u.profile_img, u.nickname, u.profile_content, u.address, p.id, p.title, p.content,p.comment_count,p.post_img,
+            `SELECT u.id userId, u.profile_img, u.nickname, u.profile_content, u.address,u.profile_background_img, p.id, p.title, p.content,p.comment_count,p.post_img,
             IFNULL(c.like_co,0) like_count, DATE_FORMAT(p.created_date,'%Y-%m-%d %h:%m:%s') created_date
             FROM user u LEFT JOIN post p ON u.id = p.user_id 
             LEFT JOIN (SELECT count(post_id) as like_co ,post_id FROM post_like
@@ -85,7 +85,7 @@ router.get('/edit', isLoggedIn, async (req, res, next) => {
     try {
         // DB에 유저 프로필 가져오기
         const [dbUserProfile] = await pool.execute(
-            `SELECT id userId, nickname, address, profile_content, profile_img
+            `SELECT id userId, nickname, address, profile_content, profile_img,profile_background_img
             FROM user WHERE id = ? `,
             [userId]
         );
@@ -102,13 +102,13 @@ router.get('/edit', isLoggedIn, async (req, res, next) => {
 const upload2 = multer()
 // 유저 프로필 변경하기 patch +
 router.patch('/edit', isLoggedIn,upload2.none(), async (req, res, next) => {
-    const {nickname, profile_content, profile_img, address} = req.body
+    const {nickname, profile_content, profile_img, address, profile_background_img} = req.body
     const userId = req.user.id
     try {
         // DB에 유저 프로필 수정하기
         await pool.execute(
-            `UPDATE user SET nickname=?, profile_content=?, profile_img=?, address=? where id=?`,
-            [nickname, profile_content, profile_img, address, userId ]
+            `UPDATE user SET nickname=?, profile_content=?, profile_img=?, address=?,profile_background_img=? where id=?`,
+            [nickname, profile_content, profile_img, address,profile_background_img, userId, ]
         );
         return res.status(200).json({"success":"성공"})// 수정된 프로필로 이동 --> 추후 변경
     } catch (error) {
