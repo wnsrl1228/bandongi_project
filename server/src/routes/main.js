@@ -13,7 +13,29 @@ router.get('/main', async (req, res, next) => {
             FROM post p LEFT JOIN user u ON p.user_id = u.id
             LEFT JOIN (SELECT count(post_id) as like_co ,post_id FROM post_like
             GROUP BY post_id) c ON p.id = c.post_id
-            ORDER BY created_date DESC`,
+            ORDER BY created_date DESC
+            LIMIT 21`,
+        );
+        return res.status(200).json(dbPosts); // 추후 변경
+    } catch (error) {
+        console.log(error);
+        return next(error);
+    }
+});
+router.get('/paging/:lastId/', async (req, res, next) => {
+    const lastId = req.params.lastId;
+    try {
+        // DB에서 해당 카테고리 게시글 목록 불러오기
+        const [dbPosts] = await pool.execute(
+            `SELECT p.id, u.profile_img, u.nickname,u.id userId , p.title, p.content,p.comment_count, p.post_img,
+            IFNULL(c.like_co,0) like_count, DATE_FORMAT(p.created_date,'%Y-%m-%d %h:%m:%s') created_date
+            FROM post p LEFT JOIN user u ON p.user_id = u.id
+            LEFT JOIN (SELECT count(post_id) as like_co ,post_id FROM post_like
+            GROUP BY post_id) c ON p.id = c.post_id
+            WHERE p.id < ?
+            ORDER BY created_date DESC
+            LIMIT 21`,
+            [lastId]
         );
         return res.status(200).json(dbPosts); // 추후 변경
     } catch (error) {

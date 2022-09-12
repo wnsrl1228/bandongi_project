@@ -14,19 +14,24 @@ import {
     Link,
     Button,
     CardActionArea,
+    Skeleton,
+    Stack,
 } from '@mui/material';
 import PetsIcon from '@mui/icons-material/Pets';
 import axios from "axios";
 import { Link as RouterLink} from "react-router-dom";
 
-
 export default function MainComponent() {
     const [posts, setPosts] = useState([])
+    const [lastId, setLastId] = useState(0);
+    const [finish, setFinish] = useState(0);
+
     useEffect(() => {
         const fecthPost = async () => {
             try{
                 const res = await axios.get("/main");
                 setPosts(res.data);
+                console.log(res.data)
             } catch (err){
                 alert(err);
             }
@@ -34,10 +39,46 @@ export default function MainComponent() {
         }
         fecthPost();
     },[]);
+    const throttle = (callback, delay) => {
+        let timer;
 
+        return (event) => {
+          // 타이머가 호출되면, 함수를 실행하고 타이머 제거
+          if (timer) return;
+          timer = setTimeout(() => {
+            callback(event);
+            timer = null;
+          }, delay);
+        };
+      };
+    // 페이징 스크롤 바닥에 닿으면 발생하는 이벤트
+    window.onscroll = throttle((e) => {
+            if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight-200)) {
+                setLastId(posts[posts.length - 1].id)
+                console.log("테스트" + finish)
+                if (finish == 1) {
+                    return false;
+                }
+                const url = "/paging/"+posts[posts.length - 1].id
+                axios.get(url)
+                    .then( (res) => {
+                        setPosts(posts.concat(res.data))
+                        console.log(lastId)
+                        console.log(posts[posts.length - 1].id)
+                        if (lastId == posts[posts.length - 1].id) {
 
+                            setFinish(1);
+                        }
+                        // setPosts();
+                    }).catch( (err) => {
+                        alert("다시 시도해주세요.");
+                        return false;
+                    })
+            }
+        
+    },1000);
     return (
-        <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:100}} >
+        <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:10}} >
             <Grid container justifyContent="flex-end">
                 <Link  component={RouterLink} to="/post/create" underline="none" style={{color:"white"}}>
                     <Button type="submit" variant="contained" sx={{mb:5 ,mr:5}} size="large">
@@ -47,7 +88,7 @@ export default function MainComponent() {
             </Grid>
             <Grid container spacing={2} justifyContent="space-evenly">
                 {posts.map((post,index) => (
-                    <Grid item xs={12} sm={6} md={4} key={post.id}
+                    <Grid item xs={12} sm={6} md={4} key={index}
                         >
                         <Card sx={{}}>
                             <CardHeader
@@ -145,7 +186,36 @@ export default function MainComponent() {
                         </Card>
                         
                     </Grid>
+                    
                 ))}
+                        <Grid container sx={{mt:5}} spacing={2} justifyContent="space-evenly">
+                        <Stack spacing={1}>
+                            {/* For variant="text", adjust the height via font-size */}
+                            <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                            {/* For other variants, adjust the size with `width` and `height` */}
+                            <Skeleton variant="circular" width={40} height={40} />
+                            <Skeleton variant="rectangular" width={210} height={60} />
+                            <Skeleton variant="rounded" width={210} height={60} />
+                        </Stack>
+                        <Stack spacing={1}>
+                            {/* For variant="text", adjust the height via font-size */}
+                            <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                            {/* For other variants, adjust the size with `width` and `height` */}
+                            <Skeleton variant="circular" width={40} height={40} />
+                            <Skeleton variant="rectangular" width={210} height={60} />
+                            <Skeleton variant="rounded" width={210} height={60} />
+                        </Stack>
+                        <Stack spacing={1}>
+                            {/* For variant="text", adjust the height via font-size */}
+                            <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                            {/* For other variants, adjust the size with `width` and `height` */}
+                            <Skeleton variant="circular" width={40} height={40} />
+                            <Skeleton variant="rectangular" width={210} height={60} />
+                            <Skeleton variant="rounded" width={210} height={60} />
+                        </Stack>
+                        </Grid>
+
+                
             </Grid>
         </Container>
 
