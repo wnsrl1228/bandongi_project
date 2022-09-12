@@ -11,9 +11,9 @@ import {
   ListItem,
   ListItemText,
   IconButton,
-
+  Link
 } from '@mui/material';
-
+import { Link as RouterLink} from "react-router-dom";
 const drawerWidth = 240;
 
 function SidebarComponent(props) {
@@ -27,9 +27,32 @@ function SidebarComponent(props) {
     const sideList = (
         <List>
             {["반려동물 친구 만들기", "내 자식 자랑하기", "묻고 답하기", "꿀팁 전수"].map((text, index) => (
-            <ListItem button key={text}>
+            <ListItem button key={text} >
                 <PetsIcon />
-                <ListItemText primary={text} />  
+                {
+                  text === "반려동물 친구 만들기" && 
+                  <a  href="/friend-make" style={{textDecoration:"none",color:"black"}}>
+                      <ListItemText primary={text} />  
+                  </a>
+                }
+                {
+                  text === "내 자식 자랑하기" && 
+                  <a href="/show-off" style={{textDecoration:"none",color:"black"}}>
+                      <ListItemText primary={text} />  
+                  </a>
+                }          
+                {
+                  text === "묻고 답하기" && 
+                  <a href="/qna" style={{textDecoration:"none",color:"black"}}>
+                      <ListItemText primary={text} />  
+                  </a>
+                }
+                {
+                  text === "꿀팁 전수" && 
+                  <a href="/tips" style={{textDecoration:"none",color:"black"}}>
+                      <ListItemText primary={text} />  
+                  </a>
+                }
             </ListItem>
             ))}
         </List>

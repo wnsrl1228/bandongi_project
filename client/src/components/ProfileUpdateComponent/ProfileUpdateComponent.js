@@ -136,7 +136,7 @@ export default function ProfileUpdateComponent() {
             <Container fixed>
             <Box component="form"  onSubmit={handleSubmit} sx={{ mt: 3 }}>
                 <Grid container sx={{mb:3,p:2,pt:5}} alignItems="center">
-              
+                    {/* 프로필 배경 이미지 변경  */}
                     <Grid item style={{backgroundColor:"grey",borderRadius:"10px"}} xs={12} height="200px" sx={{boxShadow:4}}>
                         <div className="img-preview">
                             <Avatar ref={profileBackgroundRef}  src={profileBackgroundImg|| ''} sx={{ bgcolor: "black",height:"200px", width:"100%",borderRadius:"10px"}}  variant="square"/>
@@ -155,7 +155,6 @@ export default function ProfileUpdateComponent() {
                             </label>
                         </div>
                         </Grid>
-
                     </Grid>
 
                   {/* 프로필 이미지 변경  */}

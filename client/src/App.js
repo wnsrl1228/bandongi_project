@@ -4,6 +4,7 @@ import Join from './pages/join/Join';
 import Post from './pages/post/Post';
 import Profile from './pages/profile/Profile';
 import ProfileUpdate from './pages/profileUpdate/ProfileUpdate'
+import Category from './pages/category/Category'
 import PostCreate from './pages/postCreate/PostCreate'
 import PostUpdate from './pages/postUpdate/PostUpdate'
 import PublicRoute from "./utils/PublicRoute"; 
@@ -48,6 +49,10 @@ function App() {
           <Route exact path="/login" element={ <PublicRoute restricted={true}/>}>
             <Route exact path="/login" element={<Login/>} />
           </Route>
+          <Route path="/show-off" element={<Category category="show-off"/>}/>
+          <Route path="/friend-make" element={<Category category="friend-make"/>}/>
+          <Route path="/qna" element={<Category category="qna"/>}/>
+          <Route path="/tips" element={<Category category="tips"/>}/>
           {/* <PublicRoute restricted={false} component={Home} path="/" exact /> */}
           <Route path="/login" element={<Login/>}/>
           <Route path="/join" element={<Join/>}/>
