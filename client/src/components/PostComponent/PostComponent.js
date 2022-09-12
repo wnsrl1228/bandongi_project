@@ -38,6 +38,10 @@ export default function PostComponent(props) {
 
     const [userId, setUserId] = useState(''); 
 
+    //페이징
+    const [lastId, setLastId] = useState(0);
+    const [finish, setFinish] = useState(0);
+
     //댓글 관련 변수
     const [commentContent, setCommentContent] = useState('');
 
@@ -81,8 +85,14 @@ export default function PostComponent(props) {
             try{
                 const url = "/post/" + post_id;
                 const res = await axios.get(url);
-                setComments(res.data)
                 setPost(res.data[0]);
+            } catch (err){
+                alert(err);
+            }
+            try{
+                const url = "/post/"+post_id+"/comment/paging/" + lastId;
+                const res = await axios.get(url);
+                setComments(res.data)
             } catch (err){
                 alert(err);
             }
@@ -95,11 +105,30 @@ export default function PostComponent(props) {
             } catch (err){
                 alert(err);
             }
-
-
         }
         fecthPost();
     },[]);
+
+    const plusComments = () => {
+        setLastId(comments[comments.length - 1].c_id)
+
+        if (finish == 1) {
+            return false;
+        }
+        const url = "/post/"+post_id+"/comment/paging/" + comments[comments.length - 1].c_id;
+        axios.get(url)
+            .then( (res) => {
+                setComments(comments.concat(res.data))
+                console.log(comments);
+                if (lastId == comments[comments.length - 1].c_id) {
+                    setFinish(1);
+                }
+                // setPosts();
+            }).catch( (err) => {
+                alert("다시 시도해주세요.");
+                return false;
+            })
+    }
 
 
     const onCommentContentHandler = (e) => {
@@ -159,7 +188,7 @@ export default function PostComponent(props) {
     }
 
     return (
-        <Container  maxWidth="sm" sx={{mt: 20,mb:100}}>
+        <Container  maxWidth="sm" sx={{mt: 20,mb:60}}>
             <Card sx={{}}>
                 <CardHeader
                     avatar={
@@ -300,9 +329,9 @@ export default function PostComponent(props) {
 
                     {
                         post.c_id !== null 
-                        ? comments.slice(0).reverse().map((comment,index) => (
+                        ? comments.map((comment,index) => (
 
-                            <Paper style={{ padding: "10px 20px", marginTop:10 }} key={comment.c_id}>
+                            <Paper style={{ padding: "10px 20px", marginTop:10 }} key={index}>
                                 <Grid container >
                                     <Grid item sx={{mr:2}}>
                                         <Link component={RouterLink} to={{pathname:`/profile/${comment.commentUserID}`}}>
@@ -344,10 +373,12 @@ export default function PostComponent(props) {
                             </Paper>
                             )) : <div></div>
                     }
-                    {
-                        
-                    }
             </Card>
+            {finish == false &&
+                <Button type="submit" variant="contained" sx={{mb:5 ,mr:5}} onClick={plusComments} size="large">
+                    댓글 더 보기
+                </Button>
+                }
         </Container>
     )
 }

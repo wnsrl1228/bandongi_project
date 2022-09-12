@@ -52,7 +52,7 @@ export default function MainComponent() {
       };
     // 페이징 스크롤 바닥에 닿으면 발생하는 이벤트
     window.onscroll = throttle((e) => {
-            if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight-200)) {
+            if ((window.innerHeight + window.scrollY) >= ((document.body.offsetHeight/5)*4)) {
                 setLastId(posts[posts.length - 1].id)
                 if (finish == 1) {
                     return false;
@@ -73,7 +73,7 @@ export default function MainComponent() {
         
     },1000);
     return (
-        <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:10}} >
+        <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:60}} >
             <Grid container justifyContent="flex-end">
                 <Link  component={RouterLink} to="/post/create" underline="none" style={{color:"white"}}>
                     <Button type="submit" variant="contained" sx={{mb:5 ,mr:5}} size="large">
@@ -183,32 +183,35 @@ export default function MainComponent() {
                     </Grid>
                     
                 ))}
-                        <Grid container sx={{mt:5}} spacing={2} justifyContent="space-evenly">
-                        <Stack spacing={1}>
-                            {/* For variant="text", adjust the height via font-size */}
-                            <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
-                            {/* For other variants, adjust the size with `width` and `height` */}
-                            <Skeleton variant="circular" width={40} height={40} />
-                            <Skeleton variant="rectangular" width={210} height={60} />
-                            <Skeleton variant="rounded" width={210} height={60} />
-                        </Stack>
-                        <Stack spacing={1}>
-                            {/* For variant="text", adjust the height via font-size */}
-                            <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
-                            {/* For other variants, adjust the size with `width` and `height` */}
-                            <Skeleton variant="circular" width={40} height={40} />
-                            <Skeleton variant="rectangular" width={210} height={60} />
-                            <Skeleton variant="rounded" width={210} height={60} />
-                        </Stack>
-                        <Stack spacing={1}>
-                            {/* For variant="text", adjust the height via font-size */}
-                            <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
-                            {/* For other variants, adjust the size with `width` and `height` */}
-                            <Skeleton variant="circular" width={40} height={40} />
-                            <Skeleton variant="rectangular" width={210} height={60} />
-                            <Skeleton variant="rounded" width={210} height={60} />
-                        </Stack>
-                        </Grid>
+                {finish === 0 &&
+                    <Grid container sx={{mt:5}} spacing={2} justifyContent="space-evenly">
+                    <Stack spacing={1}>
+                        {/* For variant="text", adjust the height via font-size */}
+                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                        {/* For other variants, adjust the size with `width` and `height` */}
+                        <Skeleton variant="circular" width={40} height={40} />
+                        <Skeleton variant="rectangular" width={210} height={60} />
+                        <Skeleton variant="rounded" width={210} height={60} />
+                    </Stack>
+                    <Stack spacing={1}>
+                        {/* For variant="text", adjust the height via font-size */}
+                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                        {/* For other variants, adjust the size with `width` and `height` */}
+                        <Skeleton variant="circular" width={40} height={40} />
+                        <Skeleton variant="rectangular" width={210} height={60} />
+                        <Skeleton variant="rounded" width={210} height={60} />
+                    </Stack>
+                    <Stack spacing={1}>
+                        {/* For variant="text", adjust the height via font-size */}
+                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                        {/* For other variants, adjust the size with `width` and `height` */}
+                        <Skeleton variant="circular" width={40} height={40} />
+                        <Skeleton variant="rectangular" width={210} height={60} />
+                        <Skeleton variant="rounded" width={210} height={60} />
+                    </Stack>
+                    </Grid>
+                }
+
 
                 
             </Grid>

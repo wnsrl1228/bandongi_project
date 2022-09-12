@@ -14,6 +14,8 @@ import {
     Link,
     Button,
     CardActionArea,
+    Skeleton,
+    Stack,
 } from '@mui/material';
 import PetsIcon from '@mui/icons-material/Pets';
 import axios from "axios";
@@ -23,10 +25,12 @@ import { Link as RouterLink} from "react-router-dom";
 export default function CategoryComponent(props) {
     const category = props.category;
     const [posts, setPosts] = useState([])
+    const [lastId, setLastId] = useState(0);
+    const [finish, setFinish] = useState(0);
     useEffect(() => {
         const fecthPost = async () => {
             try{
-                const res = await axios.get("/"+category);
+                const res = await axios.get("/"+category+"/paging/0");
                 setPosts(res.data);
             } catch (err){
                 alert(err);
@@ -36,19 +40,62 @@ export default function CategoryComponent(props) {
         fecthPost();
     },[]);
 
+    const throttle = (callback, delay) => {
+        let timer;
 
+        return (event) => {
+          // 타이머가 호출되면, 함수를 실행하고 타이머 제거
+          if (timer) return;
+          timer = setTimeout(() => {
+            callback(event);
+            timer = null;
+          }, delay);
+        };
+      };
+    // 페이징 스크롤 바닥에 닿으면 발생하는 이벤트
+    window.onscroll = throttle((e) => {
+            if ((window.innerHeight + window.scrollY) >= ((document.body.offsetHeight/5)*4)) {
+                setLastId(posts[posts.length - 1].id)
+                if (finish == 1) {
+                    return false;
+                }
+                const url = "/"+category+"/paging/"+posts[posts.length - 1].id;
+                axios.get(url)
+                    .then( (res) => {
+                        setPosts(posts.concat(res.data))
+                        if (lastId == posts[posts.length - 1].id) {
+                            setFinish(1);
+                        }
+                        // setPosts();
+                    }).catch( (err) => {
+                        alert("다시 시도해주세요.");
+                        return false;
+                    })
+            }
+        
+    },1000);
     return (
-        <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:100}} >
-            <Grid container justifyContent="flex-end">
-                <Link  component={RouterLink} to="/post/create" underline="none" style={{color:"white"}}>
-                    <Button type="submit" variant="contained" sx={{mb:5 ,mr:5}} size="large">
-                        게시물 작성얍
-                    </Button>
-                </Link>
-            </Grid>
+        <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:60}} >
+            <Container fixed style={{border: '1px solid #d2d2d2',borderRadius:"10px",backgroundColor:"#FFFFFF"}} sx={{p:2,mb:5,boxShadow:2}}>
+                <Grid container justifyContent="space-between">
+                <Typography variant="h5" >
+                    {category == "friend-make" && "반려동물 친구 만들기"}
+                    {category == "show-off" && "내 자식 자랑하기"}
+                    {category == "qna" && "묻고 답하기"}
+                    {category == "tips" && "꿀팁 전수"}
+                </Typography>
+                    <Link  component={RouterLink} to="/post/create" underline="none" style={{color:"white"}}>
+                        <Button type="submit" variant="contained" sx={{mr:5}} size="large">
+                            게시물 작성
+                        </Button>
+                    </Link>
+                </Grid>
+            </Container>
+
+
             <Grid container spacing={2} justifyContent="space-evenly">
                 {posts.map((post,index) => (
-                    <Grid item xs={12} sm={6} md={4} key={post.id}
+                    <Grid item xs={12} sm={6} md={4} key={index}
                         >
                         <Card sx={{}}>
                             <CardHeader
@@ -147,6 +194,34 @@ export default function CategoryComponent(props) {
                         
                     </Grid>
                 ))}
+                {finish === 0 &&
+                    <Grid container sx={{mt:5}} spacing={2} justifyContent="space-evenly">
+                    <Stack spacing={1}>
+                        {/* For variant="text", adjust the height via font-size */}
+                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                        {/* For other variants, adjust the size with `width` and `height` */}
+                        <Skeleton variant="circular" width={40} height={40} />
+                        <Skeleton variant="rectangular" width={210} height={60} />
+                        <Skeleton variant="rounded" width={210} height={60} />
+                    </Stack>
+                    <Stack spacing={1}>
+                        {/* For variant="text", adjust the height via font-size */}
+                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                        {/* For other variants, adjust the size with `width` and `height` */}
+                        <Skeleton variant="circular" width={40} height={40} />
+                        <Skeleton variant="rectangular" width={210} height={60} />
+                        <Skeleton variant="rounded" width={210} height={60} />
+                    </Stack>
+                    <Stack spacing={1}>
+                        {/* For variant="text", adjust the height via font-size */}
+                        <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                        {/* For other variants, adjust the size with `width` and `height` */}
+                        <Skeleton variant="circular" width={40} height={40} />
+                        <Skeleton variant="rectangular" width={210} height={60} />
+                        <Skeleton variant="rounded" width={210} height={60} />
+                    </Stack>
+                    </Grid>
+                }
             </Grid>
         </Container>
 

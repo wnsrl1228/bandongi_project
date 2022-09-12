@@ -132,7 +132,7 @@ export default function ProfileUpdateComponent() {
     }
 
     return (
-        <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:100}} >
+        <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:60}} >
             <Container fixed>
             <Box component="form"  onSubmit={handleSubmit} sx={{ mt: 3 }}>
                 <Grid container sx={{mb:3,p:2,pt:5}} alignItems="center">
