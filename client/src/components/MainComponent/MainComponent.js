@@ -31,7 +31,6 @@ export default function MainComponent() {
             try{
                 const res = await axios.get("/main");
                 setPosts(res.data);
-                console.log(res.data)
             } catch (err){
                 alert(err);
             }
@@ -55,7 +54,6 @@ export default function MainComponent() {
     window.onscroll = throttle((e) => {
             if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight-200)) {
                 setLastId(posts[posts.length - 1].id)
-                console.log("테스트" + finish)
                 if (finish == 1) {
                     return false;
                 }
@@ -63,10 +61,7 @@ export default function MainComponent() {
                 axios.get(url)
                     .then( (res) => {
                         setPosts(posts.concat(res.data))
-                        console.log(lastId)
-                        console.log(posts[posts.length - 1].id)
                         if (lastId == posts[posts.length - 1].id) {
-
                             setFinish(1);
                         }
                         // setPosts();
