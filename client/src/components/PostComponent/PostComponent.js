@@ -238,7 +238,6 @@ export default function PostComponent(props) {
                         </Link>}
                     subheader={post.created_date}
                 /><Divider light />
-                
 
                     <CardContent sx={{p:1,pl:2,pr:1}}>
                         <Typography gutterBottom variant="body1" component="div" fontWeight="bold">

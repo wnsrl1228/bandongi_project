@@ -30,7 +30,7 @@ export default function CategoryComponent(props) {
     useEffect(() => {
         const fecthPost = async () => {
             try{
-                const res = await axios.get("/"+category+"/paging/0");
+                const res = await axios.get("api/"+category+"/paging/0");
                 setPosts(res.data);
             } catch (err){
                 alert(err);
@@ -62,6 +62,7 @@ export default function CategoryComponent(props) {
                 const url = "/api/"+category+"/paging/"+posts[posts.length - 1].id;
                 axios.get(url)
                     .then( (res) => {
+                        console.log(res.data)
                         setPosts(posts.concat(res.data))
                         if (lastId == posts[posts.length - 1].id) {
                             setFinish(1);
