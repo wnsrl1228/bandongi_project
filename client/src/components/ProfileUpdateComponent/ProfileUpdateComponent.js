@@ -54,6 +54,14 @@ export default function ProfileUpdateComponent() {
     } 
 
 
+    const checkPostCancel = (e) => {
+      var result = window.confirm("정말로 취소하시겠습니까?");
+      if(result){
+        window.location.href = '/profile/'+userId;
+      }else{
+          return false;
+      }
+    }
 
     const handleSubmit = (e) => {
       
@@ -146,7 +154,7 @@ export default function ProfileUpdateComponent() {
                     {/* 프로필 배경 이미지 변경  */}
                     <Grid item style={{backgroundColor:"grey",borderRadius:"10px"}} xs={12} height="200px" sx={{boxShadow:4}}>
                         <div className="img-preview">
-                            <Avatar ref={profileBackgroundRef}  src={profileBackgroundImg|| ''} sx={{ bgcolor: "black",height:"200px", width:"100%",borderRadius:"10px"}}  variant="square"/>
+                            <Avatar ref={profileBackgroundRef}  src={profileBackgroundImg|| ''} sx={{ bgcolor: "grey",height:"200px", width:"100%",borderRadius:"10px"}}  variant="square"/>
                             <input id="img-url2" type="hidden" name="url" value={profileBackgroundImg || ''}/>
                         </div>
                         <Grid container justifyContent="flex-end">
@@ -244,10 +252,13 @@ export default function ProfileUpdateComponent() {
                       </Container>
                     </Grid>
 
-                    <Grid container  item  xs={12} sx={{mt:4}} justifyContent="flex-end">
+                    <Grid container  item  xs={12}  justifyContent="flex-end">
                       <Button type="submit" variant="contained"
-                          sx={{ mt : 1,mb:2,mr:2, px:4, py:1}}>
+                          sx={{ mt : 3,mb:2,mr:2}}>
                               프로필 변경
+                      </Button>
+                      <Button variant="contained" onClick={checkPostCancel} sx={{ mt : 3,mb:2,mr:2}}>
+                        취소
                       </Button>
                     </Grid>
 

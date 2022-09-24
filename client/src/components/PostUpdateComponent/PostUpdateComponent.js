@@ -71,12 +71,12 @@ export default function PostUpdateComponent(props) {
         post_img : postImg
       }
       const url = "/api/post/edit/" + post_id;
-      axios.patch(url,body)
+      axios.post(url,body)
           .then( (res) => {
               if (res.data.success){
                   alert("게시글이 변경되었습니다.");
                   const url = "/post/"+ post_id;
-                  window.location = url;
+                  window.location.replace(url);
               } else{
                   alert("다시 시도해주세요.");
                   return false;
@@ -140,7 +140,7 @@ export default function PostUpdateComponent(props) {
           <Grid container sx={{mb:3,p:2}} alignItems="center">
               <Grid item sx={{ml:3}} xs={12}>
                 <Typography  variant="h5" fontWeight="Bold" style={{display:"inline-block", margin:"5px"}}>
-                  <span >카테고리 :</span>
+                  카테고리 :
                 </Typography>
                 <FormControl sx={{ ml:2 , minWidth: 220 }} size="small">
                     <InputLabel id="demo-simple-select-label">카테고리를 선택해주세요.</InputLabel>
@@ -160,8 +160,8 @@ export default function PostUpdateComponent(props) {
                   </FormControl>
               </Grid>
               <Grid item  sx={{ml:3,mt:4}} xs={12}>
-                <Typography  variant="h5" fontWeight="Bold" >
-                  <span style={{display:"inline-block", margin:"5px"}}>제목 :</span>
+                <Typography  variant="h5" fontWeight="Bold" style={{display:"inline-block", margin:"5px"}}>
+                  제목 :
                   <TextField
                         margin="normal"
                         placeholder="제목을 입력해주세요."
@@ -177,30 +177,29 @@ export default function PostUpdateComponent(props) {
                 </Typography>
               </Grid>
               <Grid item  sx={{ml:3,mt:4}} xs={12}>
-                <Typography  fontWeight="Bold" >
-                  <div className="img-preview">
-                    <Box
-                        id="img-preview"
-                        component="img"
-                        value={postImg || ''}
-                        sx={{
-                          height: 233,
-                          width: 350,
-                          maxHeight: { xs: 233, md: 167 },
-                          maxWidth: { xs: 350, md: 250 },
-                        }}
-                        src={postImg || ''}
-                        alt="미리보기"
-                        
-                      />
-                    <input id="img-url" type="hidden" name="url" value={postImg || ''}/>
-                  </div>
-                  <div>
+                <Box component={'div'} className="img-preview">
+                  <Box
+                      id="img-preview"
+                      component="img"
+                      value={postImg || ''}
+                      sx={{
+                        height: 233,
+                        width: 350,
+                        maxHeight: { xs: 233, md: 167 },
+                        maxWidth: { xs: 350, md: 250 },
+                      }}
+                      src={postImg || ''}
+                      alt="미리보기"
+                      
+                    />
+                  <input id="img-url" type="hidden" name="url" value={postImg || ''}/>
+                </Box>
+                <Box component={'div'}>
+                  <Typography  fontWeight="Bold" >
                     사진 업로드
-                    <input id="img" type="file" accept={postImg || "image/*"} onChange={handleChangeImage} style={{marginLeft:"10px"}} />
-                  </div>
-                </Typography>
-
+                  </Typography>
+                  <input id="img" type="file" accept={postImg || "image/*"} onChange={handleChangeImage} style={{marginLeft:"10px"}} />
+                </Box>
               </Grid>
               <Grid item  sx={{ml:3,mt:4,mb:-3}} xs={12}>
                 <Typography  variant="h5" fontWeight="Bold" style={{display:"inline-block", margin:"5px"}}>

@@ -187,7 +187,7 @@ export default function PostComponent(props) {
     }
 
     return (
-        <Container  maxWidth="sm" sx={{mt: 20,mb:30}}>
+        <Container  maxWidth="sm" sx={{mt: 20,mb:60}}>
             <Card sx={{}}>
                 <CardHeader
                     avatar={

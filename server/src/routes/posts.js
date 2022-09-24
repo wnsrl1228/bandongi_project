@@ -232,7 +232,7 @@ router.get('/edit/:id', isLoggedIn, async (req, res, next) => {
 })
 
 // 세부 게시글 수정하기 patch /post/edit/:id
-router.patch('/edit/:id', isLoggedIn, async (req,res,next) => {
+router.post('/edit/:id', isLoggedIn, async (req,res,next) => {
     const postId = req.params.id;
     const userId = req.user.id;
     const {title, content, category, post_img} = req.body;

@@ -53,14 +53,14 @@ export default function PostComponent() {
               if (res.data.success){
                   alert("게시글이 생성되었습니다.");
                   const url = "/post/"+res.data.postId;
-                  window.location = url;
+                  window.location.replace(url);
               } else{
                   alert("다시 시도해주세요.");
-                  window.location = "/post/create";
+                  return false;
               }
           }).catch( (err) => {
               alert("다시 시도해주세요.");
-              window.location = "/post/create";
+              return false;
           })
     };
 
@@ -115,7 +115,7 @@ export default function PostComponent() {
             <Grid container sx={{mb:3,p:2}} alignItems="center">
               <Grid item sx={{ml:3}} xs={12}>
                 <Typography  variant="h5" fontWeight="Bold" style={{display:"inline-block", margin:"5px"}}>
-                  <span >카테고리 :</span>
+                  카테고리 :
                 </Typography>
                 <FormControl sx={{ ml:2 , minWidth: 220 }} size="small">
                     <InputLabel id="demo-simple-select-label">카테고리를 선택해주세요.</InputLabel>
@@ -135,8 +135,8 @@ export default function PostComponent() {
                   </FormControl>
               </Grid>
               <Grid item  sx={{ml:3,mt:4}} xs={12}>
-                <Typography  variant="h5" fontWeight="Bold" >
-                  <span style={{display:"inline-block", margin:"5px"}}>제목 :</span>
+                <Typography  variant="h5" fontWeight="Bold" style={{display:"inline-block", margin:"5px"}}>
+                  제목 :
                   <TextField
                         margin="normal"
                         placeholder="제목을 입력해주세요."
@@ -151,8 +151,8 @@ export default function PostComponent() {
                 </Typography>
               </Grid>
               <Grid item  sx={{ml:3,mt:4}} xs={12}>
-                <Typography   fontWeight="Bold" >
-                  <div className="img-preview">
+                
+                  <Box component={'div'} className="img-preview">
                     <Box
                         id="img-preview"
                         component="img"
@@ -166,12 +166,14 @@ export default function PostComponent() {
                         src=""
                       />
                     <input id="img-url" type="hidden" name="url"/>
-                  </div>
-                  <div>
+                  </Box>
+                  <Box component={'div'} >
+                  <Typography fontWeight="Bold" >
                     사진 업로드
+                    </Typography>
                     <input id="img" type="file" accept="image/*" onChange={handleChangeImage} style={{marginLeft:"10px"}}/>
-                  </div>
-                </Typography>
+                  </Box>
+                
               </Grid>
               <Grid item  sx={{ml:3,mt:4,mb:-3}} xs={12}>
                 <Typography  variant="h5" fontWeight="Bold" style={{display:"inline-block", margin:"5px"}}>
