@@ -49,7 +49,7 @@ export default function ProfileComponent(props) {
     useEffect(() => {
         const fecthPost = async () => {
             try{
-                const url = "/user/profile/" + profile_id;
+                const url = "/api/user/profile/" + profile_id;
                 const res = await axios.get(url);
                 setPosts(res.data);
                 setNickname(res.data[0].nickname);
@@ -100,7 +100,7 @@ export default function ProfileComponent(props) {
                 if (finish == 1) {
                     return false;
                 }
-                const url = "/user/profile/"+profile_id+"/paging/"+posts[posts.length - 1].id
+                const url = "/api/user/profile/"+profile_id+"/paging/"+posts[posts.length - 1].id
                 axios.get(url)
                     .then( (res) => {
                         setPosts(posts.concat(res.data))

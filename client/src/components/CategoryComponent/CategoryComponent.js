@@ -59,7 +59,7 @@ export default function CategoryComponent(props) {
                 if (finish == 1) {
                     return false;
                 }
-                const url = "/"+category+"/paging/"+posts[posts.length - 1].id;
+                const url = "/api/"+category+"/paging/"+posts[posts.length - 1].id;
                 axios.get(url)
                     .then( (res) => {
                         setPosts(posts.concat(res.data))

@@ -58,7 +58,7 @@ export default function Join() {
             username: username,
             nickname: nickname,
         }
-        axios.post("/auth/join",body)
+        axios.post("/api/auth/join",body)
             .then( (res) => {
                 if (res.data.success){
                     alert("회원가입에 성공하셨습니다.");

@@ -25,7 +25,7 @@ export default function ProfileUpdateComponent() {
     useEffect(() => {
       const fecthPost = async () => {
           try{
-              const url = "/user/edit/";
+              const url = "/api/user/edit/";
               const res = await axios.get(url);
               setUserId(res.data.userId);
               setNickname(res.data.nickname);
@@ -64,7 +64,7 @@ export default function ProfileUpdateComponent() {
           profile_img:profileImg,
           profile_background_img : profileBackgroundImg
       }
-      axios.patch("/user/edit",body)
+      axios.patch("/api/user/edit",body)
           .then( (res) => {
               if (res.data.success){
                   alert("프로필이 변경되었습니다.");
@@ -84,7 +84,7 @@ export default function ProfileUpdateComponent() {
       const fileList = e.target.files;
       const formData = new FormData();
       formData.append("img", fileList[0])
-      axios.post('/user/img', formData,{
+      axios.post('/api/user/img', formData,{
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -110,7 +110,7 @@ export default function ProfileUpdateComponent() {
       const fileList = e.target.files;
       const formData = new FormData();
       formData.append("img", fileList[0])
-      axios.post('/user/img', formData,{
+      axios.post('/api/user/img', formData,{
         headers: {
           "Content-Type": "multipart/form-data",
         },

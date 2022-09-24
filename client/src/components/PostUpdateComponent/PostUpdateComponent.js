@@ -32,7 +32,7 @@ export default function PostUpdateComponent(props) {
     useEffect(() => {
       const fecthPost = async () => {
           try{
-              const url = "/post/edit/" + post_id;
+              const url = "/api/post/edit/" + post_id;
               const res = await axios.get(url);
               setCategory(res.data.category);
               setTitle(res.data.title);
@@ -70,7 +70,7 @@ export default function PostUpdateComponent(props) {
         category : category,
         post_img : postImg
       }
-      const url = "/post/edit/" + post_id;
+      const url = "/api/post/edit/" + post_id;
       axios.patch(url,body)
           .then( (res) => {
               if (res.data.success){
@@ -102,7 +102,7 @@ export default function PostUpdateComponent(props) {
       const fileList = e.target.files;
       const formData = new FormData();
       formData.append("img", fileList[0])
-      axios.post('/post/img', formData,{
+      axios.post('/api/post/img', formData,{
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -131,7 +131,7 @@ export default function PostUpdateComponent(props) {
         <Container fixed sx={{p:2,mb:3}}>
             <Grid container justifyContent="space-between">
               <Typography variant="h5" sx={{fontWeight:"bold"}} >
-                게시글 수정
+                게시글 생성
               </Typography>
             </Grid>
         </Container>

@@ -32,7 +32,7 @@ export default function Login() {
             password: password,
             token : sessionStorage.getItem('token'),
         }
-        axios.post("/auth/login",body)
+        axios.post("/api/auth/login",body)
             .then( (res) => {
                 if (res.data.success){
                     sessionStorage.setItem('token',res.data.userId);

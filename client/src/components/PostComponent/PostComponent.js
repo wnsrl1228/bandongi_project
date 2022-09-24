@@ -52,10 +52,7 @@ export default function PostComponent(props) {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const handleModify = () => {
-        const url = "/post/edit/" + post_id;
-        window.location.assign(url);
-    }
+
     const handleDelete = () => {
         var result = window.confirm("정말로 삭제하시겠습니까?");
         if(result){
@@ -81,14 +78,14 @@ export default function PostComponent(props) {
             setUserId(sessionStorage.getItem('token'));
             // post페이지의 데이터 불러오기
             try{
-                const url = "/post/" + post_id;
+                const url = "/api/post/" + post_id;
                 const res = await axios.get(url);
                 setPost(res.data[0]);
             } catch (err){
                 alert(err);
             }
             try{
-                const url = "/post/"+post_id+"/comment/paging/" + lastId;
+                const url = "/api/post/"+post_id+"/comment/paging/" + lastId;
                 const res = await axios.get(url);
                 setComments(res.data)
                 
@@ -101,7 +98,7 @@ export default function PostComponent(props) {
 
             // 추천 유효성 api 요청
             try{
-                const url = "/post/like/valid/" + post_id;
+                const url = "/api/post/like/valid/" + post_id;
                 const res = await axios.get(url);
                 setLikeValid(res.data[0].valid);
             } catch (err){
@@ -115,11 +112,10 @@ export default function PostComponent(props) {
     const plusComments = () => {
 
         setLastId(comments[comments.length - 1].c_id);
-        const tempLastId = comments[comments.length - 1].c_id;
         if (finish == 1) {
             return false;
         }
-        const url = "/post/"+post_id+"/comment/paging/" + comments[comments.length - 1].c_id;
+        const url = "/api/post/"+post_id+"/comment/paging/" + comments[comments.length - 1].c_id;
         axios.get(url)
             .then( (res) => {
                 setComments(comments.concat(res.data))
@@ -149,7 +145,7 @@ export default function PostComponent(props) {
             content: commentContent
         }
 
-        axios.post("/post/comment",body)
+        axios.post("/api/post/comment",body)
             .catch( (err) => {
                 alert("다시 시도해주세요.");
             })
@@ -168,7 +164,7 @@ export default function PostComponent(props) {
         
 
         if (likeValid == 0) {
-            axios.post("/post/like/plus",body)
+            axios.post("/api/post/like/plus",body)
             .then((res) => {
                 setLikeValid(likeValid+1);
                 post.p_like_count++;
@@ -178,7 +174,7 @@ export default function PostComponent(props) {
             })
 
         } else {
-            axios.post("/post/like/minus",body)
+            axios.post("/api/post/like/minus",body)
                 .then((res) => {
                     setLikeValid(likeValid-1);
                     post.p_like_count--;
@@ -223,7 +219,7 @@ export default function PostComponent(props) {
                                 }}
                                 
                                 >
-                                <MenuItem onClick={handleModify} sx={{p:0,px:3}}>
+                                <MenuItem sx={{p:0,px:3}} component={Link} onClick={() => {window.location.href=`/post/edit/${post_id}`}}>
                                     <DriveFileRenameOutlineIcon style={{paddingBottom:"6px",paddingRight:'5px'}}/>
                                     수정
                                 </MenuItem>

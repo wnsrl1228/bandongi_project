@@ -48,7 +48,7 @@ export default function PostComponent() {
         postImg : postImg
       }
      
-      axios.post("/post/create",body)
+      axios.post("/api/post/create",body)
           .then( (res) => {
               if (res.data.success){
                   alert("게시글이 생성되었습니다.");
@@ -69,7 +69,7 @@ export default function PostComponent() {
       const fileList = e.target.files;
       const formData = new FormData();
       formData.append("img", fileList[0])
-      axios.post('/post/img', formData,{
+      axios.post('/api/post/img', formData,{
         headers: {
           "Content-Type": "multipart/form-data",
         },

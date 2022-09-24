@@ -29,7 +29,7 @@ export default function MainComponent() {
     useEffect(() => {
         const fecthPost = async () => {
             try{
-                const res = await axios.get("/main");
+                const res = await axios.get("/api/main");
                 setPosts(res.data);
             } catch (err){
                 alert(err);
@@ -57,7 +57,7 @@ export default function MainComponent() {
                 if (finish == 1) {
                     return false;
                 }
-                const url = "/paging/"+posts[posts.length - 1].id
+                const url = "/api/paging/"+posts[posts.length - 1].id
                 axios.get(url)
                     .then( (res) => {
                         setPosts(posts.concat(res.data))

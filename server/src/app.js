@@ -44,10 +44,10 @@ app.use(passport.session());
 
 //router
 
-app.use('/auth', authRouter);
-app.use('/post', postRouter);
-app.use('/user', userRouter);
-app.use('/',mainRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/post', postRouter);
+app.use('/api/user', userRouter);
+app.use('/api/',mainRouter);
 
 
 

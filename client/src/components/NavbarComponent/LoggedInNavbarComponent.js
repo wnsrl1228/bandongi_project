@@ -57,7 +57,7 @@ export default function LoggedInNavbarComponent() {
     useEffect(() => {
         const fecthUser = async () => {
             try{
-                const res = await axios.get("/user/information");
+                const res = await axios.get("/api/user/information");
                 setUser(res.data[0].nickname);
                 setUserId(res.data[0].id);
                 setProfileImage(res.data[0].profile_img);
@@ -76,7 +76,7 @@ export default function LoggedInNavbarComponent() {
         setAnchorE1(null);
     };
     const isLogout = () => {
-        axios.get("/auth/logout")
+        axios.get("/api/auth/logout")
             .then( (res) => {
                 if (res.data.success){
                     sessionStorage.removeItem('token');
@@ -115,29 +115,23 @@ export default function LoggedInNavbarComponent() {
                 },
             }}
         >
-            <MenuItem>
-                <Link component={RouterLink} to="/profile/edit"  underline="none" style={{color:"black"}} >
+            <MenuItem component={RouterLink} to="/profile/edit"  underline="none" style={{color:"black"}}>
                     <ListItemIcon>
                         <PersonIcon fontSize="small" /> 
                     </ListItemIcon>
                     프로필 수정
-                </Link>
             </MenuItem>
-            <MenuItem>
-                <Link onClick={() => {window.location.href=`/profile/${userId}`}} underline="none" style={{color:"black"}}>
+            <MenuItem component={Link}  onClick={() => {window.location.href=`/profile/${userId}`}} underline="none" style={{color:"black"}}>
                     <ListItemIcon>
                         <EditIcon fontSize="small" />
                     </ListItemIcon>    
                     글 관리                 
-                </Link>
             </MenuItem>
-            <MenuItem>
-                <Link component={RouterLink} to="/friendList"  underline="none" style={{color:"black"}} >
+            <MenuItem component={RouterLink} to="/friendList"  underline="none" style={{color:"black"}} >
                     <ListItemIcon>
                         <GroupIcon fontSize="small" />
                     </ListItemIcon>
                         친구 목록
-                </Link>
             </MenuItem>
             <MenuItem onClick={isLogout}>
                 <ListItemIcon>
