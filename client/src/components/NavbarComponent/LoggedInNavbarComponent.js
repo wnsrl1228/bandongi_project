@@ -53,7 +53,7 @@ export default function LoggedInNavbarComponent() {
     //로그인 정보
     const [user, setUser] = useState([]);
     const [userId, setUserId] = useState([]);
-    const [profileImage, setProfileImage] = useState([]); //추후 기능 구현
+    const [profileImage, setProfileImage] = useState(''); //추후 기능 구현
     useEffect(() => {
         const fecthUser = async () => {
             try{

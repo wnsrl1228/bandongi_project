@@ -27,8 +27,6 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import { Link as RouterLink} from "react-router-dom";
 import axios from "axios";
 import { Box } from '@mui/system';
-import dog1 from '../MainComponent/sample/dog1.jpg';
-const hello=[dog1];
 export default function PostComponent(props) {
 
     const post_id = props.post_id;
@@ -93,6 +91,10 @@ export default function PostComponent(props) {
                 const url = "/post/"+post_id+"/comment/paging/" + lastId;
                 const res = await axios.get(url);
                 setComments(res.data)
+                
+                if (res.data.length < 20) {
+                    setFinish(1);
+                }
             } catch (err){
                 alert(err);
             }
@@ -109,9 +111,11 @@ export default function PostComponent(props) {
         fecthPost();
     },[]);
 
-    const plusComments = () => {
-        setLastId(comments[comments.length - 1].c_id)
 
+    const plusComments = () => {
+
+        setLastId(comments[comments.length - 1].c_id);
+        const tempLastId = comments[comments.length - 1].c_id;
         if (finish == 1) {
             return false;
         }
@@ -119,11 +123,10 @@ export default function PostComponent(props) {
         axios.get(url)
             .then( (res) => {
                 setComments(comments.concat(res.data))
-                console.log(comments);
-                if (lastId == comments[comments.length - 1].c_id) {
-                    setFinish(1);
+                if (res.data.length < 20) {
+                    setFinish(1)
                 }
-                // setPosts();
+
             }).catch( (err) => {
                 alert("다시 시도해주세요.");
                 return false;
@@ -339,7 +342,7 @@ export default function PostComponent(props) {
                                         </Link>
                                         
                                     </Grid>
-                                    <Grid item  wrap="nowrap" xs>
+                                    <Grid item xs>
                                         <h4 style={{ margin: 0, textAlign: "left" }}>
                                             <Link component={RouterLink} to={{pathname:`/profile/${comment.commentUserID}`}} underline="none" style={{color:"black"}}>
                                                 {comment.commentNickname}
@@ -374,7 +377,7 @@ export default function PostComponent(props) {
                             )) : <div></div>
                     }
             </Card>
-            {finish == false &&
+            {finish === 0 &&
                 <Button type="submit" variant="contained" sx={{mb:5 ,mr:5}} onClick={plusComments} size="large">
                     댓글 더 보기
                 </Button>
