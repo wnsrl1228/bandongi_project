@@ -27,33 +27,41 @@ function SidebarComponent(props) {
     const sideList = (
         <List>
             {["반려동물 친구 만들기", "내 자식 자랑하기", "묻고 답하기", "꿀팁 전수"].map((text, index) => (
-            <ListItem button key={text} >
-                <PetsIcon />
+              <div key={text}>
+
                 {
                   text === "반려동물 친구 만들기" && 
-                  <a  href="/friend-make" style={{textDecoration:"none",color:"black"}}>
-                      <ListItemText primary={text} />  
-                  </a>
+                  <ListItem button component="a" href="/friend-make">
+                    <PetsIcon />
+                        <ListItemText primary={text}  />  
+                  </ListItem>
                 }
                 {
+                  
                   text === "내 자식 자랑하기" && 
-                  <a href="/show-off" style={{textDecoration:"none",color:"black"}}>
-                      <ListItemText primary={text} />  
-                  </a>
+                  <ListItem button component="a" href="/show-off">
+                    <PetsIcon />
+                        <ListItemText primary={text}  />  
+                  </ListItem>
                 }          
                 {
                   text === "묻고 답하기" && 
-                  <a href="/qna" style={{textDecoration:"none",color:"black"}}>
-                      <ListItemText primary={text} />  
-                  </a>
+                  <ListItem button component="a" href="/qna">
+                    <PetsIcon />
+                        <ListItemText primary={text}  />  
+                  </ListItem>
+                  
                 }
                 {
                   text === "꿀팁 전수" && 
-                  <a href="/tips" style={{textDecoration:"none",color:"black"}}>
-                      <ListItemText primary={text} />  
-                  </a>
+                  <ListItem button component="a" href="/tips">
+                    <PetsIcon />
+                        <ListItemText primary={text}  />  
+                  </ListItem>
                 }
-            </ListItem>
+            
+              </div>
+          
             ))}
         </List>
     );

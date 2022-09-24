@@ -132,10 +132,12 @@ export default function LoggedInNavbarComponent() {
                 </Link>
             </MenuItem>
             <MenuItem>
-                <ListItemIcon>
-                    <GroupIcon fontSize="small" />
-                </ListItemIcon>
-                    친구 목록
+                <Link component={RouterLink} to="/friendList"  underline="none" style={{color:"black"}} >
+                    <ListItemIcon>
+                        <GroupIcon fontSize="small" />
+                    </ListItemIcon>
+                        친구 목록
+                </Link>
             </MenuItem>
             <MenuItem onClick={isLogout}>
                 <ListItemIcon>

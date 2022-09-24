@@ -76,9 +76,9 @@ export default function CategoryComponent(props) {
     },1000);
     return (
         <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:60}} >
-            <Container fixed style={{border: '1px solid #d2d2d2',borderRadius:"10px",backgroundColor:"#FFFFFF"}} sx={{p:2,mb:5,boxShadow:2}}>
+            <Container fixed sx={{p:2,mb:3}}>
                 <Grid container justifyContent="space-between">
-                <Typography variant="h5" >
+                <Typography variant="h5" sx={{fontWeight:"bold"}} >
                     {category == "friend-make" && "반려동물 친구 만들기"}
                     {category == "show-off" && "내 자식 자랑하기"}
                     {category == "qna" && "묻고 답하기"}

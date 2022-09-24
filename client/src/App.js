@@ -7,6 +7,7 @@ import ProfileUpdate from './pages/profileUpdate/ProfileUpdate'
 import Category from './pages/category/Category'
 import PostCreate from './pages/postCreate/PostCreate'
 import PostUpdate from './pages/postUpdate/PostUpdate'
+import FriendList from './pages/friendList/FriendList'
 import PublicRoute from "./utils/PublicRoute"; 
 import PrivateRoute from "./utils/PrivateRoute";
 
@@ -45,6 +46,9 @@ function App() {
           </Route>
           <Route exact path="/profile/:id" element={ <PrivateRoute restricted={true}/>}>
             <Route exact path="/profile/:id" element={<Profile/>} />
+          </Route>
+          <Route exact path="/friendList" element={ <PrivateRoute restricted={true}/>}>
+            <Route exact path="/friendList" element={<FriendList/>} />
           </Route>
           <Route exact path="/login" element={ <PublicRoute restricted={true}/>}>
             <Route exact path="/login" element={<Login/>} />

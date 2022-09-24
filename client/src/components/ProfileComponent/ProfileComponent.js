@@ -117,6 +117,13 @@ export default function ProfileComponent(props) {
     },1000);
     return (
         <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:10}} >
+            <Container fixed sx={{px:5,ml:{md:3,sm:3}}}>
+                <Grid container justifyContent="space-between">
+                <Typography variant="h5" sx={{fontWeight:"bold"}} >
+                    글 관리
+                </Typography>
+                </Grid>
+            </Container>
             <Container fixed>
             <Grid container sx={{mb:3,p:2,pt:5}} alignItems="center">
                 <Grid item style={{backgroundColor:"grey",borderRadius:"10px"}} xs={12} height="200px" sx={{boxShadow:4}}>
@@ -130,7 +137,7 @@ export default function ProfileComponent(props) {
                 <Grid item  sx={{ml:2,mt: {xs:2}}} xs={10}  sm={7} md={8} lg={9}>
                     <Grid container justifyContent="space-between">
                         <Grid item>
-                            <Typography  variant="h4" fontWeight="Bold" >
+                            <Typography  variant="h6" fontWeight="Bold" >
                                 {nickname}
                             </Typography>
                         </Grid>
@@ -139,13 +146,13 @@ export default function ProfileComponent(props) {
 
                 </Grid>
                 <Grid item  sx={{ml:3,mt:4}} xs={12}>
-                  <Typography  variant="h5" fontWeight="Bold" >
+                  <Typography  variant="h6" fontWeight="Bold" >
                     사는 곳 : {address}
                   </Typography>
                 </Grid>
                 
                 <Grid item  sx={{ml:3,mt:4,mb:-3}} xs={12}>
-                  <Typography  variant="h5" fontWeight="Bold" >
+                  <Typography  variant="h6" fontWeight="Bold" >
                     자기소개
                   </Typography>
                 </Grid>
@@ -157,7 +164,7 @@ export default function ProfileComponent(props) {
                   </Container>
                 </Grid>
             </Grid>
-            <h1 style={{marginLeft:"20px"}}>글 목록</h1>
+            <h3 style={{marginLeft:"20px"}}>글 목록</h3>
             </Container>
             
             

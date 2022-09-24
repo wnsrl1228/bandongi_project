@@ -103,9 +103,16 @@ export default function PostComponent() {
     }
     return (
       <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:100}} >
-      <Container fixed style={{border: '1px solid #d2d2d2',borderRadius:"10px",backgroundColor:"#FFFFFF"}} sx={{p:5,boxShadow:4}}>
-      <Box component="form"  onSubmit={handleSubmit} sx={{ mt: 3 }}>
-          <Grid container sx={{mb:3,p:2}} alignItems="center">
+        <Container fixed sx={{p:2,mb:3}}>
+            <Grid container justifyContent="space-between">
+              <Typography variant="h5" sx={{fontWeight:"bold"}} >
+                게시글 생성
+              </Typography>
+            </Grid>
+        </Container>
+        <Container fixed style={{border: '1px solid #d2d2d2',borderRadius:"10px",backgroundColor:"#FFFFFF"}} sx={{p:5,boxShadow:4}}>
+          <Box component="form"  onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <Grid container sx={{mb:3,p:2}} alignItems="center">
               <Grid item sx={{ml:3}} xs={12}>
                 <Typography  variant="h5" fontWeight="Bold" style={{display:"inline-block", margin:"5px"}}>
                   <span >카테고리 :</span>

@@ -133,8 +133,15 @@ export default function ProfileUpdateComponent() {
 
     return (
         <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:60}} >
+            <Container fixed sx={{px:5,ml:{md:3,sm:3}}}>
+                <Grid container justifyContent="space-between">
+                <Typography variant="h5" sx={{fontWeight:"bold"}} >
+                    프로필 수정
+                </Typography>
+                </Grid>
+            </Container>
             <Container fixed>
-            <Box component="form"  onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <Box component="form"  onSubmit={handleSubmit}>
                 <Grid container sx={{mb:3,p:2,pt:5}} alignItems="center">
                     {/* 프로필 배경 이미지 변경  */}
                     <Grid item style={{backgroundColor:"grey",borderRadius:"10px"}} xs={12} height="200px" sx={{boxShadow:4}}>
@@ -196,7 +203,7 @@ export default function ProfileUpdateComponent() {
                     </Grid>
 
                     <Grid item  sx={{ml:3,mt:4}} xs={12}>
-                      <Typography  variant="h5" fontWeight="Bold" >
+                      <Typography  variant="h6" fontWeight="Bold" >
                         사는 곳 :
                         <TextField
                               margin="normal"
@@ -213,7 +220,7 @@ export default function ProfileUpdateComponent() {
                     </Grid>
                     
                     <Grid item  sx={{ml:3,mt:4,mb:-3}} xs={12}>
-                      <Typography  variant="h5" fontWeight="Bold" >
+                      <Typography  variant="h6" fontWeight="Bold" >
                         자기소개
                       </Typography>
                     </Grid>
@@ -239,7 +246,7 @@ export default function ProfileUpdateComponent() {
 
                     <Grid container  item  xs={12} sx={{mt:4}} justifyContent="flex-end">
                       <Button type="submit" variant="contained"
-                          sx={{ mt : 3,mb:2,mr:2}}>
+                          sx={{ mt : 1,mb:2,mr:2, px:4, py:1}}>
                               프로필 변경
                       </Button>
                     </Grid>

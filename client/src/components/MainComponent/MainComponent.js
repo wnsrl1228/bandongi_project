@@ -74,13 +74,18 @@ export default function MainComponent() {
     },1000);
     return (
         <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:60}} >
-            <Grid container justifyContent="flex-end">
-                <Link  component={RouterLink} to="/post/create" underline="none" style={{color:"white"}}>
-                    <Button type="submit" variant="contained" sx={{mb:5 ,mr:5}} size="large">
-                        게시물 작성
-                    </Button>
-                </Link>
-            </Grid>
+            <Container fixed sx={{p:2,mb:3}}>
+                <Grid container justifyContent="space-between">
+                <Typography variant="h5" sx={{fontWeight:"bold"}} >
+                    게시글 최신순
+                </Typography>
+                    <Link  component={RouterLink} to="/post/create" underline="none" style={{color:"white"}}>
+                        <Button type="submit" variant="contained" sx={{mr:5}} size="large">
+                            게시물 작성
+                        </Button>
+                    </Link>
+                </Grid>
+            </Container>
             <Grid container spacing={2} justifyContent="space-evenly">
                 {posts.map((post,index) => (
                     <Grid item xs={12} sm={6} md={4} key={index}
