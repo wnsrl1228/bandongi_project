@@ -151,29 +151,27 @@ export default function PostComponent() {
                 </Typography>
               </Grid>
               <Grid item  sx={{ml:3,mt:4}} xs={12}>
-                
-                  <Box component={'div'} className="img-preview">
-                    <Box
-                        id="img-preview"
-                        component="img"
-                        sx={{
-                          height: 233,
-                          width: 350,
-                          maxHeight: { xs: 233, md: 167 },
-                          maxWidth: { xs: 350, md: 250 },
-                        }}
-                        alt="미리보기"
-                        src=""
-                      />
-                    <input id="img-url" type="hidden" name="url"/>
-                  </Box>
-                  <Box component={'div'} >
+                <Box component={'div'} className="img-preview">
+                  <Box
+                      id="img-preview"
+                      component="img"
+                      sx={{
+                        height: 233,
+                        width: 350,
+                        maxHeight: { xs: 233, md: 167 },
+                        maxWidth: { xs: 350, md: 250 },
+                      }}
+                      alt="미리보기"
+                      src=""
+                    />
+                  <input id="img-url" type="hidden" name="url"/>
+                </Box>
+                <Box component={'div'} >
                   <Typography fontWeight="Bold" >
                     사진 업로드
-                    </Typography>
-                    <input id="img" type="file" accept="image/*" onChange={handleChangeImage} style={{marginLeft:"10px"}}/>
-                  </Box>
-                
+                  </Typography>
+                  <input id="img" type="file" accept="image/*" onChange={handleChangeImage} style={{marginLeft:"10px"}}/>
+                </Box>
               </Grid>
               <Grid item  sx={{ml:3,mt:4,mb:-3}} xs={12}>
                 <Typography  variant="h5" fontWeight="Bold" style={{display:"inline-block", margin:"5px"}}>
