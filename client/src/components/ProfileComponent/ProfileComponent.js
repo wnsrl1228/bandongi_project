@@ -59,7 +59,9 @@ export default function ProfileComponent(props) {
                 setProfileContent(res.data[0].profile_content);
                 setAddress(res.data[0].address);
                 setProfileBackgroundImg(res.data[0].profile_background_img);
-               
+                if (res.data.length < 20) {
+                    setFinish(1);
+                }
             } catch (err){
                 alert(err);
             }
@@ -103,8 +105,9 @@ export default function ProfileComponent(props) {
                 const url = "/api/user/profile/"+profile_id+"/paging/"+posts[posts.length - 1].id
                 axios.get(url)
                     .then( (res) => {
+                        console.log(res.data)
                         setPosts(posts.concat(res.data))
-                        if (lastId == posts.concat(res.data)[posts.length - 1].id) {
+                        if (res.data.length < 20) {
                             setFinish(1);
                         }
                         // setPosts();
@@ -116,7 +119,7 @@ export default function ProfileComponent(props) {
         
     },1000);
     return (
-        <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:10}} >
+        <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:60}} >
             <Container fixed sx={{px:5,ml:{md:3,sm:3}}}>
                 <Grid container justifyContent="space-between">
                 <Typography variant="h5" sx={{fontWeight:"bold"}} >
