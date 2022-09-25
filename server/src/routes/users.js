@@ -80,6 +80,22 @@ router.get('/profile/:id', isLoggedIn, async (req, res, next) => {
         return next(error);
     }
 });
+// 프로필 버튼 보이는지 여부 -->추후 변경
+router.get('/checkFriend/:id', isLoggedIn, async (req, res, next) => {
+    const profileUserId = req.params.id;
+    const userId = req.user.id
+    try {
+        // DB에 해당 id 유저의 정보랑 게시글 불러오기
+        const [dbUserProfileAndPosts] = await pool.execute(
+            `select count(*) count from friend where (user_id=? OR user_id=?) AND (friend_id=? OR friend_id=?)`,
+            [userId,profileUserId,profileUserId,userId]
+        );
+        return res.status(201).json(dbUserProfileAndPosts[0]); //추후 변경
+    } catch (error) {
+        console.log(error);
+        return next(error);
+    }
+});
 // 유저 프로필 페이징
 router.get('/profile/:id/paging/:lastId', isLoggedIn, async (req, res, next) => {
     const userId = req.params.id;

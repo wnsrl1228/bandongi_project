@@ -20,6 +20,7 @@ import {
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PetsIcon from '@mui/icons-material/Pets';
 import axios from "axios";
 import { Link as RouterLink} from "react-router-dom";
@@ -45,6 +46,7 @@ export default function ProfileComponent(props) {
 
     const [lastId, setLastId] = useState(0);
     const [finish, setFinish] = useState(0);
+    const [viewFriendBtn, setViewFriendBtn] = useState(false);
 
     useEffect(() => {
         const fecthPost = async () => {
@@ -65,10 +67,32 @@ export default function ProfileComponent(props) {
             } catch (err){
                 alert(err);
             }
-            
+            axios.get("/api/user/checkFriend/" + profile_id)
+            .then((res) => {
+                if (res.data.count === 0) {
+                    setViewFriendBtn(true)
+                }
+            })
+            .catch((err) => {
+                alert(err);
+            });
+
+
         }
         fecthPost();
+
     },[]);
+
+    const requestFriend = () => {
+        axios.get("/api/friend/request/"+userId)
+        .then( (res) => {
+            alert("친구요청을 보냈습니다.");
+        })
+        .catch( (err) => {
+            alert("다시 시도해주세요");
+        })
+        window.location.reload()
+    }
 
     // 자신의 프로필일 경우에만 프로필수정 버튼이 보임
     const isMyProfile = () => {
@@ -80,6 +104,21 @@ export default function ProfileComponent(props) {
                             </Button>
                         </Typography>
                    </Grid>;
+        }
+        return ;
+    }
+    const isViewFriendBtn = () => {
+        if (userId != sessionStorage.getItem('token')) {
+            console.log(viewFriendBtn)
+            if (viewFriendBtn == true) {
+                return <Grid item>
+                            <Typography  >
+                                <Button variant="contained"  onClick={e=>{requestFriend()}}>
+                                    <PersonAddIcon/>&nbsp; 친구 요청
+                                </Button>
+                            </Typography>
+                        </Grid>;
+            }
         }
         return ;
     }
@@ -145,6 +184,7 @@ export default function ProfileComponent(props) {
                             </Typography>
                         </Grid>
                         {isMyProfile()}
+                        {isViewFriendBtn()}
                     </Grid>
 
                 </Grid>

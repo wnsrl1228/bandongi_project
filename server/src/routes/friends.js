@@ -130,7 +130,7 @@ router.delete('/cancel/:id', isLoggedIn, async (req, res, next) => {
     }
 });
 // 차단 풀기 post
-router.get('/block/cancel/:id', isLoggedIn, async (req, res, next) => {
+router.post('/block/cancel/:id', isLoggedIn, async (req, res, next) => {
     const friendId = req.params.id;
     const userId = req.user.id;
     try {
@@ -162,41 +162,17 @@ router.get('/search', isLoggedIn, async (req, res, next) => {
         return next(error);
     }
 });
-// 친구 요청받기 post --> 웹 소켓 활용 --> 추후구현
 // 친구 요청 post
-router.post('/:id/request', isLoggedIn, async (req, res, next) => {
+router.get('/request/:id', isLoggedIn, async (req, res, next) => {
     const friendId = req.params.id;
     const userId = req.user.id;
-    if (friendId == userId) {
-        console.log('친구 아이디와 내 아이디가 같음.');
-        return res.redirect('/');
-    }
+
     try {
-        // DB에서 친구 id 가 유호한 값인지 불러오기
-        const [dbfriend] = await pool.execute(
-            `SELECT id FROM user WHERE id=?`,
-            [friendId]
-        );
-        if (Array.isArray(dbfriend) && dbfriend.length == 0) {
-            console.log('친구id 가 유호하지 않습니다..');
-            return res.redirect('/');
-        }
-        const [dbFriendCount] = await pool.execute(
-            `SELECT user_id FROM friend WHERE user_id=? AND friend_id=? `,
+       await pool.execute(
+            `INSERT INTO friend VALUES(?,?,0) `,
             [userId, friendId]
         );
-        // 최초의 친구 요청인 경우
-        if (Array.isArray(dbFriendCount) && dbFriendCount.length == 0) {
-            await pool.execute(
-                `INSERT INTO friend VALUES(?,?,0)`,
-                [userId, friendId]
-            );
-            // 상대방에게 요청 알림 보내는 코드 --> 추후 구현
-            return res.status(200).json({"result":"성공"}); //추후 변경
-        } else {
-            console.log('친구 요청이 불가능 합니다.');
-            return res.redirect('/');
-        }
+        return res.status(200).json({"success":"성공"});
     } catch (error) {
         console.log(error);
         return next(error);

@@ -62,7 +62,6 @@ export default function CategoryComponent(props) {
                 const url = "/api/"+category+"/paging/"+posts[posts.length - 1].id;
                 axios.get(url)
                     .then( (res) => {
-                        console.log(res.data)
                         setPosts(posts.concat(res.data))
                         if (lastId == posts[posts.length - 1].id) {
                             setFinish(1);
