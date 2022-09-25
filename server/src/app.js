@@ -12,6 +12,7 @@ const passportConfig = require('./passport');
 const authRouter = require('./routes/auths');
 const postRouter = require('./routes/posts');
 const userRouter = require('./routes/users');
+const friendRouter = require('./routes/friends');
 const mainRouter = require('./routes/main');
 
 
@@ -47,6 +48,7 @@ app.use(passport.session());
 app.use('/api/auth', authRouter);
 app.use('/api/post', postRouter);
 app.use('/api/user', userRouter);
+app.use('/api/friend', friendRouter);
 app.use('/api/',mainRouter);
 
 

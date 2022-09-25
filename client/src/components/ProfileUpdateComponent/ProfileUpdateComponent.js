@@ -140,7 +140,7 @@ export default function ProfileUpdateComponent() {
     }
 
     return (
-        <Container  maxWidth="lg" sx={{mt: {xs:10,sm:16,md:20},mb:60}} >
+        <Container  maxWidth="lg"  sx={{mt: {xs:10,sm:16,md:20},mb:60}} >
             <Container fixed sx={{px:5,ml:{md:3,sm:3}}}>
                 <Grid container justifyContent="space-between">
                 <Typography variant="h5" sx={{fontWeight:"bold"}} >
@@ -148,9 +148,9 @@ export default function ProfileUpdateComponent() {
                 </Typography>
                 </Grid>
             </Container>
-            <Container fixed>
-            <Box component="form"  onSubmit={handleSubmit}>
-                <Grid container sx={{mb:3,p:2,pt:5}} alignItems="center">
+            <Container fixed >
+            <Box component="form"  onSubmit={handleSubmit} >
+                <Grid container sx={{mb:3,p:2,pt:5}} alignItems="center" >
                     {/* 프로필 배경 이미지 변경  */}
                     <Grid item style={{backgroundColor:"grey",borderRadius:"10px"}} xs={12} height="200px" sx={{boxShadow:4}}>
                         <div className="img-preview">

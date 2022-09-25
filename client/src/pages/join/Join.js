@@ -144,8 +144,10 @@ export default function Join() {
                             name="username"
                             label="이름"
                             size="small"
+                            rows="5"
                             value={username}
                             onChange ={onUsernameHandler}
+                            inputProps={{ maxLength: 10 }}
                             fullWidth
                             required
                             sx={{ mb:-1 }}
@@ -155,6 +157,7 @@ export default function Join() {
                             name="nickname"
                             label="닉네임"
                             size="small"
+                            inputProps={{ maxLength: 10 }}
                             value={nickname}
                             onChange ={onNicknameHandler}
                             fullWidth
