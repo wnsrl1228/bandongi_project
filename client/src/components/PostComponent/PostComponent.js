@@ -28,7 +28,7 @@ import { Link as RouterLink} from "react-router-dom";
 import axios from "axios";
 import { Box } from '@mui/system';
 export default function PostComponent(props) {
-
+   
     const post_id = props.post_id;
     const [post, setPost] = useState([]);
     const [comments, setComments] = useState([]);
@@ -56,7 +56,7 @@ export default function PostComponent(props) {
     const handleDelete = () => {
         var result = window.confirm("정말로 삭제하시겠습니까?");
         if(result){
-            const url = "/post/" + post_id;
+            const url = "/api/post/" + post_id;
             axios.delete(url)
             .then((res) => {
                 if (res.data.success == '성공'){
@@ -161,7 +161,6 @@ export default function PostComponent(props) {
         const body = {
             post_id: post_id,
         }
-        
 
         if (likeValid == 0) {
             axios.post("/api/post/like/plus",body)
@@ -185,7 +184,49 @@ export default function PostComponent(props) {
         }
 
     }
+    const plueCommentLike = (event, comment) => {
+        if (comment.commentUserID == sessionStorage.getItem('token')) {
+            alert("자신의 댓글은 추천할 수 없습니다.")
+            return;
+        }
 
+        const body = {
+            comment_id: comment.c_id,
+        }
+        const target = event.currentTarget.parentElement.parentElement.children[1]
+        axios.post("/api/post/comment/like",body)
+        .then((res) => {
+            if (res.data.result === "refuse") {
+                alert("이미 추천한 댓글 입니다.");
+                
+            } else {
+                target.innerHTML++;
+            }
+        })
+        .catch((err) => {
+            alert("다시 시도해주세요.");
+        })        
+    }
+
+    // 댓글 삭제
+    const handleCommentDelete = (comment) => {
+        var result = window.confirm("정말로 삭제하시겠습니까?");
+        if(result){
+            const url = "/api/post/comment/" + comment.c_id;
+            axios.delete(url)
+            .then((res) => {
+                if (res.data.success == '성공'){
+                    window.location.reload()
+                } else {
+                    alert("다시 시도해주세요.");
+                }
+            })
+            .catch((err) => {
+                alert("다시 시도해주세요.");
+            })
+        }
+        return false;
+    }
     return (
         <Container  maxWidth="sm" sx={{mt: 20,mb:60}}>
             <Card sx={{}}>
@@ -333,16 +374,29 @@ export default function PostComponent(props) {
                                 <Grid container >
                                     <Grid item sx={{mr:2}}>
                                         <Link component={RouterLink} to={{pathname:`/profile/${comment.commentUserID}`}}>
-                                            <Avatar src={comment.profile_img}></Avatar>
+                                            <Avatar src={comment.commentUserProfileImg}></Avatar>
                                         </Link>
                                         
                                     </Grid>
                                     <Grid item xs>
-                                        <h4 style={{ margin: 0, textAlign: "left" }}>
-                                            <Link component={RouterLink} to={{pathname:`/profile/${comment.commentUserID}`}} underline="none" style={{color:"black"}}>
-                                                {comment.commentNickname}
-                                            </Link>
-                                        </h4>
+                                        <Grid container direction="row" justifyContent="space-between" alignItems="center" >
+                                            <h4 style={{ margin: 0, textAlign: "left" }}>
+                                                <Link component={RouterLink} to={{pathname:`/profile/${comment.commentUserID}`}} underline="none" style={{color:"black"}}>
+                                                    {comment.commentNickname}
+                                                </Link>
+                                            </h4>
+                                            {
+                                                userId == comment.commentUserID
+                                                ? 
+                                                <Typography component={'p'}>
+                                                    <IconButton onClick={()=>{handleCommentDelete(comment)}}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </Typography>
+                                                : <span></span>
+                                            }
+                                        </Grid>
+
                                         {/* 댓글 내용 */}
     
                                         <Typography  style={{background:"#dcdcdc",display:"inline-block",whiteSpace: 'normal' }} 
@@ -354,17 +408,19 @@ export default function PostComponent(props) {
                                         
                                         <Grid container direction="row"justifyContent="flex-start" alignItems="center" >
                                             <Typography  sx={{fontWeight:350,fontSize:12,maxWidth:"300px"}}>
-                                                <IconButton sx={{mb:0.5}} disableRipple>   
+                                                <IconButton  onClick={(event) => {plueCommentLike(event,comment);}} style={{}} sx={{mb:0.5}} disableRipple>   
                                                         <PetsIcon fontSize="small"  padding="1"/>
                                                 </IconButton>   
-                                                {comment.c_like_count}
                                             </Typography> 
-                                            <Typography  sx={{fontWeight:"100",fontSize:12, px:2}}>
+                                            <Typography  sx={{fontWeight:350,fontSize:12,maxWidth:"300px"}}>
+                                                {comment.c_like_count}
+                                            </Typography>
+                                            {/* <Typography  sx={{fontWeight:"100",fontSize:12, px:2}}>
                                                 댓글 달기
-                                            </Typography>       
-                                            <p style={{ textAlign: "left", color: "gray", fontSize:"15px"}}>
+                                            </Typography>        */}
+                                            <Typography component={'p'} sx={{px:2}} style={{ textAlign: "left", color: "gray", fontSize:"15px"}}>
                                                 {comment.c_created_date}
-                                            </p>                                   
+                                            </Typography>                                   
                                         </Grid>
                                     </Grid>
                                 </Grid>

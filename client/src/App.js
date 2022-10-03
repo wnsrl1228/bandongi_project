@@ -8,6 +8,7 @@ import Category from './pages/category/Category'
 import PostCreate from './pages/postCreate/PostCreate'
 import PostUpdate from './pages/postUpdate/PostUpdate'
 import FriendList from './pages/friendList/FriendList'
+import Search from './pages/search/Search'
 import PublicRoute from "./utils/PublicRoute"; 
 import PrivateRoute from "./utils/PrivateRoute";
 
@@ -31,7 +32,7 @@ function App() {
           {/* <Route path="/" element={<Home/>}/> */}
 
           <Route exact path="/" element={<Home/>}/>
-
+          <Route exact path="/search" element={<Search/>}/>
           <Route exact path="/post/create" element={ <PrivateRoute restricted={true}/>}>
             <Route exact path="/post/create" element={<PostCreate/>} />
           </Route>
@@ -53,13 +54,16 @@ function App() {
           <Route exact path="/login" element={ <PublicRoute restricted={true}/>}>
             <Route exact path="/login" element={<Login/>} />
           </Route>
+          <Route exact path="/join" element={ <PublicRoute restricted={true}/>}>
+            <Route exact path="/join" element={<Join/>} />
+          </Route>
           <Route path="/show-off" element={<Category category="show-off"/>}/>
           <Route path="/friend-make" element={<Category category="friend-make"/>}/>
           <Route path="/qna" element={<Category category="qna"/>}/>
           <Route path="/tips" element={<Category category="tips"/>}/>
           {/* <PublicRoute restricted={false} component={Home} path="/" exact /> */}
-          <Route path="/login" element={<Login/>}/>
-          <Route path="/join" element={<Join/>}/>
+          {/* <Route path="/login" element={<Login/>}/>
+          <Route path="/join" element={<Join/>}/> */}
         </Routes>
       </Router>
     </ThemeProvider>

@@ -6,10 +6,7 @@ const path = require('path');
 const { isLoggedIn, isNotLoggedIn} = require('./middlewares');
 
 
-// 로그인 화면 불러오기
-router.get('/', (req, res, next) => {
-    res.sendFile(path.resolve('views/testLogin.html'));
-})
+
 //회원가입
 router.post('/join', isNotLoggedIn, async (req,res,next) => {
 

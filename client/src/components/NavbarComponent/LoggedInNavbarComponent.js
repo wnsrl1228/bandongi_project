@@ -89,10 +89,11 @@ export default function LoggedInNavbarComponent() {
             })
     }
 
-    const isProfileUpdatePage =() => {
+    const [searchPost, setSearchPost] = useState('');
 
+    const searchHandler = (e) => {
+        setSearchPost(e.currentTarget.value)
     }
-
     const renderMobileMenu = (
         <Menu
             anchorEl={anchorE1}
@@ -156,6 +157,17 @@ export default function LoggedInNavbarComponent() {
                             </SearchIconWrapper>
                             <StyledInputBase
                                 placeholder="검색"
+                                onChange={searchHandler}
+                                onKeyPress= {(e) => {
+                                    if (e.key === 'Enter') {
+                                        if (searchPost.trim().length == '') {
+                                            alert("내용을 입력해주세요.")
+                                            return false;
+                                        }
+                                        window.location.href=`/search?qt=${searchPost}`
+                                      // write your functionality here
+                                    }
+                            }}
                                 inputProps={{ 'aria-label': 'search' }}/>
                         </Search>
                         <Box sx={{ flexGrow: 1 }} />

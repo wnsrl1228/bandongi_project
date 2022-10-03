@@ -115,6 +115,32 @@ router.post('/like/minus', isLoggedIn, async (req, res, next) => {
         return next(error);
     }
 });
+//  댓글 추천 이벤트
+router.post('/comment/like', isLoggedIn, async (req, res, next) => {
+    const {comment_id} = req.body
+    const userId = req.user.id;
+    
+    try {
+        // DB에 댓글 추가하기
+        const [likeValid] = await pool.execute(
+            `SELECT count(*) as count FROM comment_like where user_id=? AND comment_id =?;`,
+            [userId, comment_id]
+        );
+        // 추천이 안 되어 있는 상태
+        if (likeValid[0].count == 0 ) {
+            await pool.execute(
+                `INSERT INTO comment_like (user_id, comment_id) VALUES (?, ?);`,
+                [userId, comment_id]
+            );
+            return res.status(200).json({"result":"plus"});
+        } else {
+            return res.status(200).json({"result":"refuse"});
+        }
+       
+    } catch (error) {
+        return next(error);
+    }
+});
 //  게시글 추천 체크 여부 확인 
 router.get('/like/valid/:id', isLoggedIn, async (req, res, next) => {
     const post_id = req.params.id;
@@ -172,7 +198,7 @@ router.get('/:id/comment/paging/:lastId', isLoggedIn, async (req, res, next) => 
         if (lastId == 0) {
             const [dbComments] = await pool.execute(
                 `SELECT IFNULL(c_l.c_like_count,0) c_like_count,
-                c.id c_id, c.content c_content, c.parent_group, c.child_group_order, DATE_FORMAT(c.created_date,'%Y-%m-%d %H:%i:%s') c_created_date, c.updated_date c_updated_date, cu.nickname commentNickname, cu.id commentUserID
+                c.id c_id, c.content c_content, c.parent_group, c.child_group_order, DATE_FORMAT(c.created_date,'%Y-%m-%d %H:%i:%s') c_created_date, c.updated_date c_updated_date, cu.nickname commentNickname, cu.id commentUserID, cu.profile_img commentUserProfileImg
                 FROM comment c LEFT JOIN user cu ON c.user_id = cu.id
                 LEFT JOIN (SELECT count(comment_id) as c_like_count, comment_id FROM comment_like GROUP BY comment_id) c_l ON c.id = c_l.comment_id
                 WHERE c.post_id=?
@@ -184,7 +210,7 @@ router.get('/:id/comment/paging/:lastId', isLoggedIn, async (req, res, next) => 
         } else {
             const [dbComments] = await pool.execute(
                 `SELECT IFNULL(c_l.c_like_count,0) c_like_count,
-                c.id c_id, c.content c_content, c.parent_group, c.child_group_order, DATE_FORMAT(c.created_date,'%Y-%m-%d %H:%i:%s') c_created_date, c.updated_date c_updated_date, cu.nickname commentNickname, cu.id commentUserID
+                c.id c_id, c.content c_content, c.parent_group, c.child_group_order, DATE_FORMAT(c.created_date,'%Y-%m-%d %H:%i:%s') c_created_date, c.updated_date c_updated_date, cu.nickname commentNickname, cu.id commentUserID, cu.profile_img commentUserProfileImg
                 FROM comment c LEFT JOIN user cu ON c.user_id = cu.id
                 LEFT JOIN (SELECT count(comment_id) as c_like_count, comment_id FROM comment_like GROUP BY comment_id) c_l ON c.id = c_l.comment_id
                 WHERE c.post_id=? AND c.id < ?
@@ -258,6 +284,27 @@ router.post('/edit/:id', isLoggedIn, async (req,res,next) => {
             [title, content, category, post_img, postId]
         );
         return res.status(200).json({"success":"성공"})// 수정된 프로필로 이동 --> 추후 변경
+    } catch (error) {
+        console.log(error);
+        return next(error);
+    }
+});
+// 세부 게시글 삭제하기 delete /post/:id
+router.delete('/comment/:id', isLoggedIn, async (req,res,next) => {
+    const commentId = req.params.id;
+
+    try {
+        // 게시글 comment_count 감소
+        await pool.execute(
+            `UPDATE post SET comment_count = comment_count - 1 WHERE id = (select post_id from comment where id = ?);`,
+            [commentId]
+        );
+        // DB에 해당 id 게시글 삭제
+        await pool.execute(
+            "DELETE FROM comment WHERE id=?;",
+            [commentId]
+        );
+        return res.status(200).json({"success":"성공"});
     } catch (error) {
         console.log(error);
         return next(error);

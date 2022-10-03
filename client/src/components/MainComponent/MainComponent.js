@@ -31,6 +31,9 @@ export default function MainComponent() {
             try{
                 const res = await axios.get("/api/main");
                 setPosts(res.data);
+                if (res.data.length < 20) {
+                    setFinish(1);
+                }
             } catch (err){
                 alert(err);
             }
@@ -116,7 +119,7 @@ export default function MainComponent() {
                                             display: "-webkit-box",
                                             WebkitLineClamp: "1",
                                             WebkitBoxOrient: "vertical",
-                                            fontSize:"20px",
+                                            fontSize:"16px",
                                             mt:1
                                         }}>
                                         {post.title}
@@ -144,7 +147,7 @@ export default function MainComponent() {
                                         display: "-webkit-box",
                                         WebkitLineClamp: "7",
                                         WebkitBoxOrient: "vertical",
-                                        fontSize:"18px",
+                                        fontSize:"14px",
                                         height:"180px"
                                     }}>
                                     {post.content}
@@ -156,7 +159,7 @@ export default function MainComponent() {
                                         display: "-webkit-box",
                                         WebkitLineClamp: "2",
                                         WebkitBoxOrient: "vertical",
-                                        fontSize:"18px",
+                                        fontSize:"14px",
                                     }}>
                                     {post.content}
                                 </Typography>

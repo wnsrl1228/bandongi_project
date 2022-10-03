@@ -22,7 +22,7 @@ import axios from "axios";
 import { Link as RouterLink} from "react-router-dom";
 
 
-export default function CategoryComponent(props) {
+export default function SearchComponent(props) {
     const category = props.category;
     const [posts, setPosts] = useState([])
     const [lastId, setLastId] = useState(0);
@@ -30,7 +30,7 @@ export default function CategoryComponent(props) {
     useEffect(() => {
         const fecthPost = async () => {
             try{
-                const res = await axios.get("api/"+category+"/paging/0");
+                const res = await axios.get("api/search/"+window.location.search.split("=")[1]+"/paging/0");
                 setPosts(res.data);
                 if (res.data.length < 20) {
                     setFinish(1);
@@ -62,7 +62,7 @@ export default function CategoryComponent(props) {
                 if (finish == 1) {
                     return false;
                 }
-                const url = "/api/"+category+"/paging/"+posts[posts.length - 1].id;
+                const url = "api/search/"+window.location.search.split("=")[1]+"/paging/"+posts[posts.length - 1].id;
                 axios.get(url)
                     .then( (res) => {
                         setPosts(posts.concat(res.data))

@@ -1,4 +1,4 @@
-// import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import { Button,
     Typography,
@@ -32,7 +32,17 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
     color: 'inherit',
 }));
+
+
 export default function NavbarComponent() {
+
+    
+    const [searchPost, setSearchPost] = useState('');
+
+    const searchHandler = (e) => {
+        setSearchPost(e.currentTarget.value)
+    }
+
     return (
         
         <Box sx={{ flexGrow: 1 }}>
@@ -51,6 +61,17 @@ export default function NavbarComponent() {
                             </SearchIconWrapper>
                             <StyledInputBase
                                 placeholder="검색"
+                                onChange={searchHandler}
+                                onKeyPress= {(e) => {
+                                    if (e.key === 'Enter') {
+                                        if (searchPost.trim().length == '') {
+                                            alert("내용을 입력해주세요.")
+                                            return false;
+                                        }
+                                        window.location.href=`/search?qt=${searchPost}`
+                                      // write your functionality here
+                                    }
+                            }}
                                 inputProps={{ 'aria-label': 'search' }}/>
                         </Search>
                         <Box sx={{ flexGrow: 1 }} />

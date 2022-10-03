@@ -36,7 +36,7 @@ router.post('/img', isLoggedIn, upload.single('img'), async (req,res,next) => {
 // 해당 id의 user 프로필 페이지 불러오기
 router.get('/information', isLoggedIn, async (req, res, next) => {
     const userId = req.user.id
-    console.log(userId);
+  
     try {
         // DB에 해당 id 유저의 정보랑 게시글 불러오기
         const [dbInformation] = await pool.execute(
@@ -80,7 +80,7 @@ router.get('/profile/:id', isLoggedIn, async (req, res, next) => {
         return next(error);
     }
 });
-// 프로필 버튼 보이는지 여부 -->추후 변경
+// 프로필 친구요청 버튼 보이는지 여부 -->추후 변경
 router.get('/checkFriend/:id', isLoggedIn, async (req, res, next) => {
     const profileUserId = req.params.id;
     const userId = req.user.id
@@ -164,45 +164,45 @@ router.patch('/edit', isLoggedIn,upload2.none(), async (req, res, next) => {
 
 
 
-// 게시글 좋아요 눌렀을 때 patch
-router.post('/post/:id/like', isLoggedIn, async (req, res, next) => {
-    const postId = req.params.id;
-    const userId = req.user.id
-    try {
-        // DB에서 해당 ID의 post 불러오기
-        const [dbPost] = await pool.execute(
-            `SELECT l.user_id, p.user_id post_user_id FROM 
-            post p LEFT JOIN post_like l ON l.post_id=p.id WHERE p.id=?;`,
-            [postId]
-        );
-        // post가 없는 경우
-        if (Array.isArray(dbPost) && dbPost.length == 0) {
-            console.log('존재하지 않는 게시글 입니다..');
-            return res.redirect('/');
-        }
-        // 좋아요 한 적이 없는 경우
-        if (dbPost[0].user_id === null) {
-            // 본인의 글을 좋아요 한 경우
-            if (dbPost[0].post_user_id == userId){
-                console.log('본인의 글은 좋아요 할 수 없습니다...');
-                return res.redirect('/');
-            } else {
-                await pool.execute(
-                    `INSERT INTO post_like VALUES(?,?) `,
-                    [userId, postId]
-                );
-                return res.status(200).json({"result":"성공"});
-            }
-        } else {
-            // 이미 좋아요 한 경우
-            return res.json({"result":"이미 좋아요를 누른 게시물 입니다"});
-        }
-    } catch (error) {
-        console.log(error);
-        return next(error);
-    }
+// // 게시글 좋아요 눌렀을 때 patch
+// router.post('/post/:id/like', isLoggedIn, async (req, res, next) => {
+//     const postId = req.params.id;
+//     const userId = req.user.id
+//     try {
+//         // DB에서 해당 ID의 post 불러오기
+//         const [dbPost] = await pool.execute(
+//             `SELECT l.user_id, p.user_id post_user_id FROM 
+//             post p LEFT JOIN post_like l ON l.post_id=p.id WHERE p.id=?;`,
+//             [postId]
+//         );
+//         // post가 없는 경우
+//         if (Array.isArray(dbPost) && dbPost.length == 0) {
+//             console.log('존재하지 않는 게시글 입니다..');
+//             return res.redirect('/');
+//         }
+//         // 좋아요 한 적이 없는 경우
+//         if (dbPost[0].user_id === null) {
+//             // 본인의 글을 좋아요 한 경우
+//             if (dbPost[0].post_user_id == userId){
+//                 console.log('본인의 글은 좋아요 할 수 없습니다...');
+//                 return res.redirect('/');
+//             } else {
+//                 await pool.execute(
+//                     `INSERT INTO post_like VALUES(?,?) `,
+//                     [userId, postId]
+//                 );
+//                 return res.status(200).json({"result":"성공"});
+//             }
+//         } else {
+//             // 이미 좋아요 한 경우
+//             return res.json({"result":"이미 좋아요를 누른 게시물 입니다"});
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         return next(error);
+//     }
 
-});
+// });
 // 댓글 좋아요 눌렀을 때 patch
 router.post('/comment/:id/like', isLoggedIn, async (req, res, next) => {
     const commentId = req.params.id;

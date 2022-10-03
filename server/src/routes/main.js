@@ -45,6 +45,9 @@ router.get('/paging/:lastId', async (req, res, next) => {
     }
 });
 
+
+
+
 router.get('/:category/paging/:lastId', async (req, res, next) => {
     const category = req.params.category;
     const lastId = req.params.lastId;
@@ -92,9 +95,47 @@ router.get('/:category/paging/:lastId', async (req, res, next) => {
         console.log(error);
         return next(error);
     }
-    
-    // post데이터와 view 리턴 --> 추후 구현
-    // res.render("이동할 view", { 게시글데이터 });
+})
+// 검색
+router.get('/search/:qs/paging/:lastId', async (req, res, next) => {
+    const qs = '%' + req.params.qs + '%';
+    const lastId = req.params.lastId;
+
+    try {
+        if (lastId == 0) {
+            const [dbPosts] = await pool.execute(
+                `SELECT p.id, u.profile_img, u.nickname,u.id userId , p.title, p.content,p.comment_count, p.post_img,
+                IFNULL(c.like_co,0) like_count, DATE_FORMAT(p.created_date,'%Y-%m-%d %H:%i:%s') created_date
+                FROM post p LEFT JOIN user u ON p.user_id = u.id
+                LEFT JOIN (SELECT count(post_id) as like_co ,post_id FROM post_like
+                GROUP BY post_id) c ON p.id = c.post_id
+                WHERE p.title like ? or p.content like ? or u.nickname like ?
+                ORDER BY created_date DESC
+                LIMIT 21`,
+                [qs, qs, qs]
+            );
+            return res.status(201).json(dbPosts); // 추후 변경
+        } else {
+            const [dbPosts] = await pool.execute(
+                `SELECT p.id, u.profile_img, u.nickname,u.id userId , p.title, p.content,p.comment_count, p.post_img,
+                IFNULL(c.like_co,0) like_count, DATE_FORMAT(p.created_date,'%Y-%m-%d %H:%i:%s') created_date
+                FROM post p LEFT JOIN user u ON p.user_id = u.id
+                LEFT JOIN (SELECT count(post_id) as like_co ,post_id FROM post_like
+                GROUP BY post_id) c ON p.id = c.post_id
+                WHERE p.title like ? or p.content like ? or u.nickname like ? AND p.id < ?
+                ORDER BY created_date DESC
+                LIMIT 21`,
+                [qs, qs, qs, lastId]
+            );
+            return res.status(201).json(dbPosts); // 추후 변경
+        }
+        // DB에서 해당 카테고리 게시글 목록 불러오기
+
+       
+    } catch (error) {
+        console.log(error);
+        return next(error);
+    }
 })
 
 // // 카테고리 페이지 불러오기  get /post/:category

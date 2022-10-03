@@ -145,23 +145,23 @@ router.post('/block/cancel/:id', isLoggedIn, async (req, res, next) => {
     }
 });
 // 유저 친구 검색 --> 추후 구현
-router.get('/search', isLoggedIn, async (req, res, next) => {
-    const nickname = '%' + req.body.nickname + '%';
-    const userId = req.user.id;
-    try {
-        // DB에 해당되는 친구목록 가져오기
-        const [dbUserFriends] = await pool.execute(
-            `SELECT friend_id, nickname, profile_img 
-            FROM friend f LEFT JOIN user u ON f.friend_id=u.id 
-            WHERE f.user_id=? and status=1 and u.nickname LIKE ?;`,
-            [userId,nickname]
-        );
-        return res.status(201).json(dbUserFriends);
-    } catch (error) {
-        console.log(error);
-        return next(error);
-    }
-});
+// router.get('/search', isLoggedIn, async (req, res, next) => {
+//     const nickname = '%' + req.body.nickname + '%';
+//     const userId = req.user.id;
+//     try {
+//         // DB에 해당되는 친구목록 가져오기
+//         const [dbUserFriends] = await pool.execute(
+//             `SELECT friend_id, nickname, profile_img 
+//             FROM friend f LEFT JOIN user u ON f.friend_id=u.id 
+//             WHERE f.user_id=? and status=1 and u.nickname LIKE ?;`,
+//             [userId,nickname]
+//         );
+//         return res.status(201).json(dbUserFriends);
+//     } catch (error) {
+//         console.log(error);
+//         return next(error);
+//     }
+// });
 // 친구 요청 post
 router.get('/request/:id', isLoggedIn, async (req, res, next) => {
     const friendId = req.params.id;

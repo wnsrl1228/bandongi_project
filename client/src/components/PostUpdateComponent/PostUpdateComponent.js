@@ -62,29 +62,31 @@ export default function PostUpdateComponent(props) {
     const handleSubmit = (e) => {
       if (initTitle === title && initContent === content && initCategory === category && initPostImg === postImg ) {
         alert("변경사항이 없습니다.");
-        return false;
+      } else {
+        const body = {
+          title: title,
+          content : content,
+          category : category,
+          post_img : postImg
+        }
+        const url = "/api/post/edit/" + post_id;
+        axios.post(url,body)
+            .then( (res) => {
+              console.log(res);
+                if (res.data.success){
+                    alert("게시글이 변경되었습니다.");
+                    const url = "/post/"+ post_id;
+                    window.location.replace(url);
+                } else{
+                    alert("다시 시도해주세요.");
+                    return false;
+                }
+            }).catch( (err) => {
+                alert("다시 시도해주세요.");
+                return false;
+            })
       }
-      const body = {
-        title: title,
-        content : content,
-        category : category,
-        post_img : postImg
-      }
-      const url = "/api/post/edit/" + post_id;
-      axios.post(url,body)
-          .then( (res) => {
-              if (res.data.success){
-                  alert("게시글이 변경되었습니다.");
-                  const url = "/post/"+ post_id;
-                  window.location.replace(url);
-              } else{
-                  alert("다시 시도해주세요.");
-                  return false;
-              }
-          }).catch( (err) => {
-              alert("다시 시도해주세요.");
-              return false;
-          })
+      
     };
 
     const checkPostCancel = (e) => {
@@ -136,7 +138,7 @@ export default function PostUpdateComponent(props) {
             </Grid>
         </Container>
       <Container fixed style={{border: '1px solid #d2d2d2',borderRadius:"10px",backgroundColor:"#FFFFFF"}} sx={{p:5,boxShadow:4}}>
-      <Box component="form"  onSubmit={handleSubmit} sx={{ mt: 3 }}>
+      <Box component="form"   sx={{ mt: 3 }}>
           <Grid container sx={{mb:3,p:2}} alignItems="center">
               <Grid item sx={{ml:3}} xs={12}>
                 <Typography  variant="h5" fontWeight="Bold" style={{display:"inline-block", margin:"5px"}}>
@@ -223,7 +225,7 @@ export default function PostUpdateComponent(props) {
               </Grid>
 
               <Grid container  item  xs={12} sx={{mt:4}} justifyContent="flex-end">
-                <Button type="submit" variant="contained" sx={{ mt : 3,mb:2,mr:2}}>
+                <Button onClick={handleSubmit} variant="contained" sx={{ mt : 3,mb:2,mr:2}}>
                         게시물 변경
                 </Button>
                 <Button variant="contained" onClick={checkPostCancel} sx={{ mt : 3,mb:2,mr:2}}>
