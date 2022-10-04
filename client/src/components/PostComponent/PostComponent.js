@@ -18,7 +18,8 @@ import {
     InputAdornment,
     Paper,
     Menu,
-    MenuItem
+    MenuItem,
+    Modal
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -42,7 +43,19 @@ export default function PostComponent(props) {
 
     //댓글 관련 변수
     const [commentContent, setCommentContent] = useState('');
-
+    const [openComment, setOpenComment] = React.useState(false);
+    const [currentCommentContent, setCurrentCommentContent] = useState('');
+    const [currentCommentId, setCurrentCommentId] = useState('');
+    const handleCommentOpen = (comment) => {
+        setOpenComment(true);
+        setCurrentCommentContent(comment.c_content);
+        setCurrentCommentId(comment.c_id);
+    }
+    const handleCommentClose = () => {
+        setOpenComment(false);
+        setCurrentCommentContent('');
+        setCurrentCommentId('');
+    }
     // 수정 삭제 관련
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
@@ -227,6 +240,50 @@ export default function PostComponent(props) {
         }
         return false;
     }
+    
+    // 댓글 수정
+    const handleCommentModify = () => {
+
+        if (currentCommentId === '') {
+            return false;
+          }else if (currentCommentContent.trim().length == 0 ) {
+            alert("내용을 입력해주세요.");
+            return false;
+          } else {
+            const body = {
+              content : currentCommentContent
+            };
+           
+            axios.patch("/api/post/comment/"+currentCommentId,body)
+                .then( (res) => {
+                    if (res.data.success){
+                        window.location.reload()
+                    } else{
+                        alert("다시 시도해주세요.");
+                        return false;
+                    }
+                }).catch( (err) => {
+                    alert("다시 시도해주세요.");
+                    return false;
+                })
+          }
+    }
+    
+    const onContentHandler = (e) => {
+        setCurrentCommentContent(e.currentTarget.value)
+    }
+
+    const modalStyle = {
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: 400,
+        bgcolor: "background.paper",
+        border: "2px solid #000",
+        boxShadow: 24,
+        p: 4
+      };
     return (
         <Container  maxWidth="sm" sx={{mt: 20,mb:60}}>
             <Card sx={{}}>
@@ -388,7 +445,52 @@ export default function PostComponent(props) {
                                             {
                                                 userId == comment.commentUserID
                                                 ? 
+
                                                 <Typography component={'p'}>
+                                                    <Modal
+                                                        open={openComment}
+                                                        onClose={handleCommentClose}
+                                                        aria-labelledby="modal-modal-title"
+                                                        aria-describedby="modal-modal-description"
+                                                    >
+                                                        <Box sx={modalStyle}>
+                                                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                                                            수정할 내용
+                                                        </Typography>
+                                                        <Grid item  sx={{ml:3,mt:4,mb:-3}} xs={12}>
+                                                            <Typography  variant="h5" fontWeight="Bold" style={{display:"inline-block", margin:"5px"}}>
+                                                            내용
+                                                            </Typography>
+                                                            <Typography  variant="h6"  >
+                                                            <TextField
+                                                                    margin="normal"
+                                                                    onChange = {onContentHandler}
+                                                                    placeholder='내용을 입력해주세요.'
+                                                                    autoComplete='off'
+                                                                    fullWidth
+                                                                    size="small"
+                                                                    required 
+                                                                    multiline
+                                                                    defaultValue={currentCommentContent || ''}
+                                                                    rows={10}
+                                                                    sx={{mt:0}}
+                                                                />
+                                                            </Typography>
+                                                        </Grid>
+
+                                                        <Grid container  item  xs={12} sx={{mt:4}} justifyContent="flex-end">
+                                                            <Button  variant="contained" onClick={handleCommentModify} sx={{ mt : 3,mb:2,mr:2}}>
+                                                                    게시물 등록
+                                                            </Button>
+                                                            <Button variant="contained" onClick={handleCommentClose}  sx={{ mt : 3,mb:2,mr:2}}>
+                                                                    취소
+                                                            </Button>
+                                                        </Grid>
+                                                        </Box>
+                                                    </Modal>
+                                                    <IconButton onClick={()=>{handleCommentOpen(comment)}}>
+                                                        <DriveFileRenameOutlineIcon />
+                                                   </IconButton>
                                                     <IconButton onClick={()=>{handleCommentDelete(comment)}}>
                                                         <DeleteIcon />
                                                     </IconButton>

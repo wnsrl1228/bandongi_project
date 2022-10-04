@@ -289,6 +289,23 @@ router.post('/edit/:id', isLoggedIn, async (req,res,next) => {
         return next(error);
     }
 });
+// 세부 게시글 수정하기 delete /post/:id
+router.patch('/comment/:id', isLoggedIn, async (req,res,next) => {
+    const commentId = req.params.id;
+    const {content } = req.body;
+    try {
+        // 게시글 수정
+        await pool.execute(
+            `UPDATE comment SET content = ? WHERE id = ?;`,
+            [content, commentId]
+        );
+
+        return res.status(200).json({"success":"성공"});
+    } catch (error) {
+        console.log(error);
+        return next(error);
+    }
+});
 // 세부 게시글 삭제하기 delete /post/:id
 router.delete('/comment/:id', isLoggedIn, async (req,res,next) => {
     const commentId = req.params.id;
